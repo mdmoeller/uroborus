@@ -9,7 +9,7 @@ class RuntimeOracle:
 	FILE = ""
 
 	def __init__(self, datafile):
-		self.FILE = open(datafile, 'a')
+		self.FILE = open(datafile, 'w')
 
 	def getRunNum(self):
 		return self.run
