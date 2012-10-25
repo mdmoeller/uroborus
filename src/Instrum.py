@@ -1,11 +1,15 @@
-# author: Dan Klein
+#!/usr/bin/python
 
-import re
+
+# author: Dan Klein
+# modified: Mark Moeller 24 Oct.
+
+import re, sys
 
 def coupleLine(line, lineNum):
 
     # ignores (and removes!) comments and whitespace
-    if(len(line.strip()) == 0 or line[0] is '#'): return ""
+    if(len(line.strip()) == 0 or line[0] == '#'): return ""
 
     # ignores function headers and else branches
     if(line[:3] == "def" or line.strip() == "else:"): return "\n" + line
@@ -42,3 +46,13 @@ def makeInstrumFile(path):
     newFile.write(newSource)
     newFile.close()
     f1.close()
+
+def main():
+    args = sys.argv
+    if len(args) != 2:
+        print "usage: Instrum.py <source filename>"
+        sys.exit(1)
+
+    makeInstrumFile(args[1])
+
+main()
