@@ -1,0 +1,9 @@
+# Default behavior:
+* text=auto
+
+# Always normalize python and txt
+*.txt text
+*.py  text
+
+# Don't normalize Java binaries
+*.class binary
