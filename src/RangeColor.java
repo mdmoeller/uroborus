@@ -1,12 +1,19 @@
 import java.util.Scanner;
 
-public class RangeColor
+public abstract class RangeColor
 {
+
+    private RangeColor(){}
 
     /**
      * Computes the html color corresponding to the color values given.
-     * @param color an integer between 0 and 120 (inclusive) that represents the hue between red (0) and green (120).
-     * @param brightness a double representing full brightness (1.0) to null brightness (0.0).
+     *
+     * @param color      an integer between <code>0</code> and <code>120</code> (inclusive) that 
+     *                   represents the hue between red (0) and green (120).
+     * @param brightness a double representing full brightness, <code>1.0</code> to 
+     *                   null brightness, <code>0.0</code>.
+     *
+     * @return           an html string <code>"#XXXXXX"</code> according to the appropriate color.
      */
     public static String htmlColor(int color, double brightness)
     {
@@ -43,22 +50,29 @@ public class RangeColor
         return html;
     }
 
+
     /**
      * Computes color as htmlColor assuming brightness of 1.0.
+     *
+     * @param color  an integer between <code>0</code> and <code>120</code> (inclusive) that 
+     *               represents the hue between red (0) and green (120).
+     *
+     * @return       an html string <code>"#XXXXXX"</code> according to the appropriate color.
      */
     public static String htmlColor(int color)
     {
         return htmlColor(color, 1);
     }
 
+
+    /**
+     * For testing purposes.
+     *
+     * Prints a file to standard out which represents of range of colors as a color test.
+     */
+
     public static void main(String[] args)
     {
-        // Scanner sc = new Scanner(System.in);
-
-        // while(sc.hasNext()) {
-            // System.out.println( htmlColor(sc.nextInt(), sc.nextDouble()) );
-        // }
-        //
         System.out.println("<html>");
 
         for(int i=0; i<=120; i++) {
