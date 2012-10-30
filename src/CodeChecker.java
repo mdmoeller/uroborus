@@ -2,8 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package codechecker;
-//package abc;
+
+package abc;
 
 import java.io.*;
 
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Ronak
+ 
  */
 public class CodeChecker {
 
@@ -31,9 +31,9 @@ private BufferedWriter out ;
 
 public CodeChecker() throws FileNotFoundException
 {
-    f=new File("G:\\Exp\\CC\\euclid.py");
-    f1=new File("G:\\Exp\\CC\\euclid_passfail.txt");  
-    f2=new File("G:\\Exp\\CC\\euclid_coverage.txt");
+    f=new File("/Users/Twisha/Documents/SE/Project/uroborus/ex/euclid/euclid.py");
+    f1=new File("/Users/Twisha/Documents/SE/Project/reprojectrequirements/euclid_passfail.txt");  
+    f2=new File("/Users/Twisha/Documents/SE/Project/reprojectrequirements/euclid_coverage.txt");
     br=new BufferedReader(new FileReader(f));
     br0=new BufferedReader(new FileReader(f1));  
     br1=new BufferedReader(new FileReader(f1));  
@@ -68,7 +68,7 @@ public void seeCode()
     System.out.println("code array:");
         
         
-        for(int k=0;k<code.length;k++)
+        for(int k=1;k<code.length;k++)
         	System.out.println(code[k]);
 }
 
