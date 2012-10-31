@@ -12,16 +12,16 @@ branches.R = R
 # All of these should pass.
 # This may or may not be possible. Consider it the ultimate blackbox.
 
-R.assertTrue(branches.fun1(1,1) == 23)
+R.assertTrue(branches.fun1(1,1) == 18)
 R.assertTrue(branches.fun1(1,-1) == 23)
 R.assertTrue(branches.fun1(-1,4) == 23)
 R.assertTrue(branches.fun1(1,-4) == 23)
-R.assertTrue(branches.fun1(0,1) == 23)
-R.assertTrue(branches.fun1(1,0) == 23)
-R.assertTrue(branches.fun1(-4, -4) == 23)
+R.assertTrue(branches.fun1(0,1) == 18)
+R.assertTrue(branches.fun1(1,0) == -9)
+R.assertTrue(branches.fun1(-4, -4) == 45)
 
 R.assertTrue(branches.fun2(1,1,1) == 3)
-R.assertTrue(branches.fun2(1,-1,1) == 3)
+R.assertTrue(branches.fun2(1,-1,1) == 0)
 R.assertTrue(branches.fun2(1,1,-1) == 5)
 R.assertTrue(branches.fun2(-1,-1,1) == 0)
 R.assertTrue(branches.fun2(-1,1,-1) == 4)

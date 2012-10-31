@@ -5,6 +5,7 @@
 def fun1(a,b):
 
     m = (3 * a) + b
+
     if(m >= 0 ):
 
           m = a * b
