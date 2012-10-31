@@ -14,4 +14,4 @@ R.assertTrue( 0 == funResult ) # should pass
 
 sixResult = hello.six()  
 
-R.assertTrue( 5 == sixResult ) # should fail
+R.assertTrue( 6 == sixResult ) # should fail

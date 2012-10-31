@@ -10,6 +10,7 @@ def leaf( y ):
 
 def learned_tree( X, Y ):
 
+
     n = len(X)
     if n != len(Y) or n == 0:
         print "Error: Input vectors must have same (non-zero) size!"
@@ -132,7 +133,7 @@ def learned_tree( X, Y ):
         if x[split_on_attr] <= best_thresh:
             return lowFn(x)
         else:
-            return highFn(x)
+            return highFn(x) 
 
     return branch
 

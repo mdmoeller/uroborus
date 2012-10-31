@@ -99,6 +99,8 @@ def main():
     #     because in either case "pass/fail percentages" wouldn't make sense
     if total_passes == 0 or total_fails == 0:
         sys.stderr.write("Cannot compute percentages: require non-zero number of passes and fails\n")
+        sys.exit(2)
+
 
     # Maps every statement number to a list of unique runs that cover it
     stmt_run_cover = {}
@@ -153,20 +155,30 @@ def main():
     source = SOURCE.readlines()
 
 
+    num_lines = len(source)
     # Since stmt_html_colors uses "line numbers" starting at 1, and
     #   source is just an array of lines from the source, the line numbers
     #   need to be bumped by 1 for references to stmt_html_colors
-    for i in range(len(source)):
+    for i in range(num_lines):
+
+        # Adjust line number alignment
+        prepad = ""
+        if num_lines > 10 and i < 9:
+            prepad = "0"
+        if num_lines > 100 and i < 99:
+            prepad = prepad + "0"
+        if num_lines > 1000 and i < 999:
+            prepad = prepad + "0"
 
         # Print the line number
-        HTML_OUT.write('<font face="Courier New" color="#0000ff">' + str(i+1) + ': </font>\n')
+        HTML_OUT.write('<font face="Courier New" color="#0000ff">' + prepad + str(i+1) + ': </font>\n')
 
         # Indent properly
         for c in source[i]:
             if c == ' ':
-                HTML_OUT.write('&nbsp;')
+                HTML_OUT.write('&nbsp;'*2)
             elif c== '\t':
-                HTML_OUT.write('&nbsp;'*4)
+                HTML_OUT.write('&nbsp;'*8)
             else:
                 break
 

@@ -5,4 +5,4 @@ def fun():
 	return 0
 
 def six():
-	return 6
+	return 5

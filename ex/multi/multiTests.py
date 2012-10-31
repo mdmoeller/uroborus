@@ -1,10 +1,12 @@
+#!/usr/bin/python
+
 __author__ = 'Dan'
 
 import multiLineArgs_instrumented as multiLineArgs
 
 from RuntimeOracle import RuntimeOracle
 
-R = RuntimeOracle("euclid_passfail.txt")
+R = RuntimeOracle("multiLineArgs_passfail.txt")
 multiLineArgs.R = R
 
 R.assertTrue( multiLineArgs.isEqual(3, 3) ) # Should pass

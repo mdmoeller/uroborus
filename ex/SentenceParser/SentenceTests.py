@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Author: Dan
 # Creation date: 30 October 2012
 # Purpose: tests the SentenceParser class and its functions
