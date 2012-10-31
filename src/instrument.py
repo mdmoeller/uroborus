@@ -5,7 +5,7 @@
 # modified: Mark Moeller 24 Oct.
 # modified: Samarth Kishore 10/30/2012
 # modified: Mark 31 Oct.
-
+# modified: Samarth Kishore 10/31/2012
 import re, sys
 
 
@@ -134,6 +134,13 @@ def makeInstrumFile(path):
 
     # for loop injects the instrumenting lines into the old source code
     for i in range (len(lines)):
+    #takes care of all print statements
+        if re.findall (r'print*',lines[i].strip()):
+             couple = coupleLine(lines[i], i, do_not_instrument_lvl = dni_level)
+             newSource = newSource + couple[0]
+             dni_level = couple[1]
+             continue
+
     #instrument a file write only if it is a new statement (not a continuation)
         
         if x==0 and flag==0: 
