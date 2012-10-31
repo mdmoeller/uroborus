@@ -136,7 +136,7 @@ def makeInstrumFile(path):
     for i in range (len(lines)):
     #takes care of all print statements
         if re.findall (r'print*',lines[i].strip()):
-             newSource = newSource + coupleLine(lines[i], i, do_not_instrument_lvl = dni_level)
+             couple = coupleLine(lines[i], i, do_not_instrument_lvl = dni_level)
              newSource = newSource + couple[0]
              dni_level = couple[1]
              continue
