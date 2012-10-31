@@ -89,6 +89,8 @@ def coupleLine(line, lineNum, do_not_instrument_lvl = 0):
     # We have returned from a higher level, do not instrument at this level.
     # This is what ignores and removes comments and spaces.
     else:
+        if block:
+            return('\n' + line, current_level + 1)
         return ('\n' + line, current_level)
     
 
