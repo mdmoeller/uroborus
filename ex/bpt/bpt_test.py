@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import BPT_instrumented as BPT
-# import BPT
 
 from RuntimeOracle import RuntimeOracle
 

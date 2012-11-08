@@ -25,7 +25,7 @@ class Node:
             return None
 
         for i in range(len(self.elmts)):
-            if key <= self.elmts[i]:   # THIS IS A BUG!!! SHOULD BE <, not <=
+            if key < self.elmts[i]:   # THIS IS A BUG!!! SHOULD BE <, not <=
                 return self.chld[i].search(key)
 
         return self.chld[-1].search(key)
