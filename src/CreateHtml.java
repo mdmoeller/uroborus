@@ -20,7 +20,7 @@ public class CreateHtml {
  	 BufferedWriter out = new BufferedWriter(fstream);
   	out.write("<html><head><title>DATA</title></head>");
   	out.write("<body>");
-  	out.write("<h1><A HREF=\"\"onMouseOver=\"document.bgColor=\'white\'\">uroborus</a><h1>");
+  	out.write("<h1>uroborus<h1>");
   
   
  
@@ -33,7 +33,7 @@ public class CreateHtml {
         
     		
     	
-           str=code[i]; //+(col[i]/120);
+           str=code[i]; 
             
            if(stpf[i][0]==0 && stpf[i][1]==0)
          	sentence="<FONT size=\"5\" STYLE=\"background-color:white\" >"+str+"</FONT><br>";
@@ -44,8 +44,7 @@ public class CreateHtml {
             
             	sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"+str+" </FONT><br/>"; 
    
-            	sentence="<A onMouseOver=\"document.bgColor=\'"+shade+"\'\">"+str+"</a><br>";
-            	}        
+              	}        
             
             	out.write(sentence); 
            
