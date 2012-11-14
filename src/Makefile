@@ -1,7 +1,7 @@
 BIN_DIR=../bin
 DOC_DIR=../doc
 
-CLASSES=RangeColor CodeChecker CreateHtml
+CLASSES=RangeColor CreateHtml DisplayResult
 
 CP="../bin:."
 
