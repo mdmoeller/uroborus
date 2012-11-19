@@ -85,31 +85,11 @@ def mutateArith(line,op):
     
     # stores the mutated lines
     out = []
-    
-    # go over each split and change the one operator, creating 4
-    # new lines per occurance of the targetted operator
-    
+    for x in range (1, len(splits)):
+        out.append([])
+        for y in range(0, len(arithChars)):
+            if(arthChars[y] != op):
+                
+        out[x].append += splits[x]
+        
     return out
-
-# Recursive function that takes goes over the current split
-# of the line, replacing the target instance of the operator
-# with the new operator
-def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
-    
-    if(len(splits) == 1):
-        return splits[0]
-    
-    if(instanceNum == 0):
-        return splits[0] + " " + targetOp + " " +  mutateLineAt(splits[1:], 0, \
-                                                                    targetOp, \
-                                                                    replaceOp)
-    
-    if(instanceNum == 1):
-        return splits[0] + " " + replaceOp + " " +  mutateLineAt(splits[1:], 0, \
-                                                                    targetOp, \
-                                                                    replaceOp)
-    
-    return splits[0] + " " + targetOp + " " +  mutateLineAt(splits[1:], instanceNum-1,\
-                                                                targetOp, replaceOp)
-
-
