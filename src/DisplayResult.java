@@ -1,5 +1,6 @@
 import java.io.*;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,44 +11,41 @@ import java.util.logging.Logger;
 public class DisplayResult {
 
     private String code[];
-    private File file0,f1,file2;
-    private BufferedReader buffered_reader_code,buffered_reader_passfail,buffered_reader_pf,buffered_reader_coverage;
+    private File f,f1,f2;
+    private BufferedReader buffered_reader,buffered_reader0,buffered_reader1,buffered_reader2;
     private List<String> lines;
-    private int count,index, passfail[],pass, fail, statement_passfail[][],color[];
+    private int count,index, passfail[],pass, fail, statement_passfail[][],col[],pp,ff;
     private FileWriter fstream;
     private BufferedWriter out ;
 
     private double bright[];
     int blank[];
-
-
+    private String results[];
 
     public DisplayResult(String file1) throws FileNotFoundException
     {
         String path=("");
-        file0=new File(path+file1+".py");
+        f=new File(path+file1+".py");
         f1=new File(path+file1+"_passfail.txt");  
-        file2=new File(path+file1+"_coverage.txt");
-        buffered_reader_code=new BufferedReader(new FileReader(file0));
-        buffered_reader_passfail=new BufferedReader(new FileReader(f1));  
-        buffered_reader_pf=new BufferedReader(new FileReader(f1));  
-        buffered_reader_coverage=new BufferedReader(new FileReader(file2));  
+        f2=new File(path+file1+"_coverage.txt");
+        buffered_reader=new BufferedReader(new FileReader(f));
+        buffered_reader0=new BufferedReader(new FileReader(f1));  
+        buffered_reader1=new BufferedReader(new FileReader(f1));  
+        buffered_reader2=new BufferedReader(new FileReader(f2));  
         lines = new ArrayList<String>(); 
-
     }
-
 
     //Stores code in String array
     public void codeToString() throws IOException
     {
         String line = null;
-        line=buffered_reader_code.readLine();
+        line=buffered_reader.readLine();
         int i=0;
 
         while(line!=null)
         {
-            lines.add(i+1+":	"+line);
-            line=buffered_reader_code.readLine();
+            lines.add(i+1+":"+line);
+            line=buffered_reader.readLine();
             i++;
         }	
         lines.add(null);
@@ -58,20 +56,36 @@ public class DisplayResult {
 
         bright=new double[code.length];
         blank=new int[code.length];
+
+        results=new String[code.length];
     }
 
+    //Display code stored in array
+    public void seeCode()
+    {
+        System.out.println("code array:");
+
+        int s=0;
+        for(int k=1;k<code.length;k++)
+        {
+
+            System.out.println(code[k]);
+            if(code[k]=="	")
+                blank[s++]=k;
+        }	
+    }
 
     //Count number of runs i.e. number of entries in passfail file
     public void getCount() throws IOException
     {
-        String str=buffered_reader_passfail.readLine();
+        String str=buffered_reader0.readLine();
 
         while(str!=null)
         {
             count++;
-            str=buffered_reader_passfail.readLine();    
+            str=buffered_reader0.readLine();    
         }
-        buffered_reader_passfail.close(); 
+        buffered_reader0.close(); 
     }
 
     /*Store pass/fail values of each run in pf array indexed by run number
@@ -87,12 +101,13 @@ public class DisplayResult {
 
         for(int i=0;i<passfail.length;i++)
         {
-            line1=buffered_reader_pf.readLine();
+            line1=buffered_reader1.readLine();
             if(line1 != null) 
-            {
+            {	
                 for(int z=0;z<line1.length();z++)
                     if((r=line1.charAt(z))!=' ')
                     {
+
                         index=Integer.parseInt(String.valueOf(r));
 
                         break;
@@ -110,17 +125,22 @@ public class DisplayResult {
 
                         break;
                     }
-
-
             }
-
         }	
-
 
         System.out.println();
     }
+    /*
 
+    //Display entries of pf array
+    public void seePFArray()
+    {
+        System.out.println("pass/fail array:");
+        for(int k=0;k<passfail.length;k++)
 
+            System.out.println(passfail[k]);
+    }
+    */
 
     //Count total number of passes and fails of all runs
     public void pfCal() throws IOException
@@ -132,7 +152,9 @@ public class DisplayResult {
             else pass++;
         }
 
-        buffered_reader_pf.close();
+        System.out.println("Passes="+pass+"   Fails="+fail);
+        buffered_reader1.close();
+        System.out.println();
     }
 
 
@@ -146,7 +168,7 @@ public class DisplayResult {
         temp_array[0]="";
         int r=0;
         statement_passfail=new int[code.length][2];
-        String str2=buffered_reader_coverage.readLine();
+        String str2=buffered_reader2.readLine();
         int statement_no=0;
         int run_number=0;
 
@@ -156,7 +178,7 @@ public class DisplayResult {
 
                 if(str2.equals(temp_array[i]))
                 {
-
+                    //str2=br2.readLine();
                     flag=true;
                     break;
                 }
@@ -168,25 +190,34 @@ public class DisplayResult {
                 String s[];
                 s = str2.split(delimiter);
                 statement_no=Integer.parseInt(s[0]);
-
+                System.out.println("Statement_no= "+statement_no);
                 run_number=Integer.parseInt(s[1]);
-
+                System.out.println("Run_number= "+run_number);
 
                 if(passfail[run_number]==0)
                     statement_passfail[statement_no][0]++;
                 else
                     statement_passfail[statement_no][1]++;
             }	
-            str2=buffered_reader_coverage.readLine();
+            str2=buffered_reader2.readLine();
         }
 
-        buffered_reader_coverage.close();
+        for(int k=1;k<code.length;k++)
+        {
+            for(int m=0;m<2;m++)
+                System.out.print(statement_passfail[k][m]+"   ");
+            System.out.println();
+
+        }
+
+        buffered_reader2.close();
+
     }
 
     //Calculate the color value in % by the given formula
     public void getColorValue()
     {
-        color=new int[code.length];
+        col=new int[code.length];
         double result;
         float f;
         float p;
@@ -195,44 +226,61 @@ public class DisplayResult {
             f=statement_passfail[i][0];
             p=statement_passfail[i][1];
 
+            double percent_pass=p/pass*100;
+            double percent_fail=f/fail*100;
+
             double ppassed=(p/pass);
             double pfailed=(f/fail);
 
+            DecimalFormat twoDForm = new DecimalFormat("#.##");
+            percent_pass=Double.valueOf(twoDForm.format(percent_pass));
+            percent_fail=Double.valueOf(twoDForm.format(percent_fail));
+
+            String passed=Double.toString(percent_pass);
+            String failed=Double.toString(percent_fail);
+
+            String res="Passed: "+passed+"%; Failed: "+failed+"%";
+
+            System.out.println(res);
+
+            results[i]=res;
+
+            System.out.println("Statement "+i+" passed="+ppassed);
+            System.out.println("Statement "+i+" failed="+pfailed);
+
             result=((ppassed)/(ppassed+pfailed))*120;
 
-            color[i]=(int)result;
+            col[i]=(int)result;
             if(ppassed>pfailed)
                 bright[i]=ppassed;
             else bright[i]=pfailed;
+
+            System.out.println("Statement "+i+" brightness value= "+bright[i]);
         }
-
     }
 
-    //
-    public void createOutput() throws IOException
+    public void createOutput(String file_name) throws IOException
     {
-        CreateHtml.create(code,color, statement_passfail,bright);
-    }
-}
 
-class Computations
-{
+        CreateHtml.create(code,col, statement_passfail,results, file_name);
+    }
+
     public static void main(String args[]) throws Exception
     {
         String f1=null;
         if(args.length!=0)
+        {
             f1=args[0];
-
+        }
         DisplayResult cc=new DisplayResult(f1);
         cc.codeToString();
-
+        cc.seeCode();
         cc.getCount();
         cc.pfArray();
-
+        // cc.seePFArray();
         cc.pfCal();
         cc.statementPassFail();
         cc.getColorValue();
-        cc.createOutput();    
-
+        cc.createOutput(f1);    
     }
 }

@@ -118,8 +118,8 @@ def main():
             stmt_run_cover[stmt_num].append(run_num)
 
 
-    # Maps every statement to a list [p, f] that counts the number of RUNS
-    #     that respectively passed and failed
+    # Maps every statement to a list [p, f] where p and f are the numbers of RUNS
+    #     that cover it and respectively passed and failed
     stmt_passfail_count = {}
     for stmt in stmt_run_cover.keys():
         passed = 0
@@ -147,7 +147,7 @@ def main():
 
 
     # Set up the html output file:
-    HTML_OUT = open(basename + "_report.html", 'w')
+    HTML_OUT = open(basename + "_deprecated_report.html", 'w')
 
     HTML_OUT.write("<html>\n")
 

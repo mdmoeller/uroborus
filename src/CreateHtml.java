@@ -8,18 +8,19 @@ import java.util.logging.Logger;
 
 public class CreateHtml {
 
-    public static void create(String code[],int col[], int stpf[][], double bright[])
+    public static void create(String code[],int col[], int stpf[][], String results[], String file_name)
     {
         // Create file 
         FileWriter fstream;
         try {
-            fstream = new FileWriter("Data.html");
+            String html_file=file_name+"_report.html";
+            fstream = new FileWriter(html_file);
+            System.out.println("Fle created");
 
             BufferedWriter out = new BufferedWriter(fstream);
             out.write("<html><head><title>DATA</title></head>");
             out.write("<body>");
-            out.write("<h1>uroborus<h1>");
-
+            out.write("<h1><u>uroborus</u><h1><pre>");
 
 
             String str=null;
@@ -29,38 +30,33 @@ public class CreateHtml {
             for( int i=1;i<code.length;i++)
             {
 
-
-
-                str=code[i]; 
-
                 if(stpf[i][0]==0 && stpf[i][1]==0)
-                    sentence="<FONT size=\"5\" STYLE=\"background-color:white\" >"+str+"</FONT><br>";
+                {
+                    sentence="<FONT size=\"5\" STYLE=\"background-color:white\" >";
+                    sentence+="<span class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+                    sentence+=" <span style=\"width:500px;\"></span>";
+                    sentence+="</span></FONT><br>";
+                }
                 else
                 {	
-                    System.out.println("Color value= "+col[i]+"	Brightness value= "+bright[i]);
-                    shade=RangeColor.htmlColor(col[i], bright[i]); 
 
-                    sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"+str+" </FONT><br/>"; 
+                    shade=RangeColor.htmlColor(col[i]);             
+                    sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"; 
 
+                    sentence+="<span class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+                    sentence+=" <span style=\"width:500px;\"></span>";
+                    sentence+="</span></FONT><br>";
                 }        
 
                 out.write(sentence); 
-
-
             }	
 
-
-
-
-            out.write("</body></html>");
+            out.write("</pre></body></html>");
 
             //Close the output stream
             out.close();
-        } 
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(CreateHtml.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }
-

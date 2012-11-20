@@ -179,7 +179,7 @@ def makeInstrumFile(path):
 def main():
     args = sys.argv
     if len(args) != 2:
-        print "usage: Instrum.py <source filename>"
+        print "usage: instrument.py <source filename>"
         sys.exit(1)
 
     makeInstrumFile(args[1])
