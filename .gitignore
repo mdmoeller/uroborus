@@ -5,3 +5,7 @@
 *_passfail.txt
 *.class
 *_coverage.txt
+*.aux
+*.bbl
+*.blg
+*.log
