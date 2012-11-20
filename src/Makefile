@@ -1,5 +1,6 @@
 BIN_DIR=../bin
 DOC_DIR=../doc
+WR=../wr
 
 CLASSES=RangeColor CreateHtml DisplayResult Computation
 
@@ -22,8 +23,8 @@ $(BIN_DIR)/%.class: %.java
 $(DOC_DIR)/%.html: %.java
 	javadoc -d $(DOC_DIR) $<
 
-$(DOC_DIR)/guide.pdf: guide.tex
-	pdflatex -output-directory $(DOC_DIR) guide.tex 
+$(DOC_DIR)/guide.pdf: $(WR)/guide.tex
+	pdflatex -output-directory $(DOC_DIR) $<
 
 
 clean:
