@@ -179,7 +179,15 @@ public void pfCal() throws IOException
         
         //System.out.println("Passes="+pass+"   Fails="+fail);
         buffered_reader1.close();
-        //System.out.println();
+
+        //We cannot compute percentages if either
+        //  - no cases failed
+        //  - no cases passed
+        if(pass == 0 || fail == 0) 
+        {
+            System.err.println("DisplayResult: Cannot generate report for 100% failures or 100% passes");
+            System.exit(1);
+        }
         
 }
 
@@ -266,6 +274,8 @@ public void getColorValue()
         
         double ppassed=((double)p/(double)pass);
         double pfailed=((double)f/(double)fail);
+
+
         
         //System.out.println("Ppassed="+ppassed+";Pfailed="+pfailed);
         

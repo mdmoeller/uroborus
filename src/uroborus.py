@@ -29,13 +29,15 @@ try:
     test_module = importlib.import_module(test_module_str)
 except ImportError as ie:
     sys.stderr.write("Trouble importing test module: " + test_module_str + '\n')
-    sys.stderr.write('\n' + str(sys.exc_info()[0]) + '\n')
     sys.stderr.write(red + str(ie) + reset + '\n')
-    sys.exit(2)
+    sys.stderr.write('\n' + str(sys.exc_info()[0]) + '\n')
+    raise
+    # sys.exit(2)
 except Exception as e:
     sys.stderr.write("Unexpected error while trying to import test module. Exiting.\n")
     sys.stderr.write(red + str(e) + reset + '\n')
-    sys.exit(3)
+    raise
+    # sys.exit(3)
 
 try:
     target_module = test_module.target_module
@@ -46,10 +48,25 @@ except:
     sys.stderr.write("Test module must define which module is being tested by setting a 'target_module' variable\n")
     sys.exit(4)
 
+
+attributes = dir(test_module)
+
+# If there is an init method, call it first and remove it:
+if "init" in attributes:
+    init = getattr(test_module, "init")
+    if type(init) is types.FunctionType:
+        try:
+            init(RO)
+        except:
+            print "Could not run tests; init method crashed."
+            raise
+        attributes.remove("init")
+
+
 print "\n\nTest cases:"
 
 # Run all the methods in the test module
-for attr in dir(test_module):
+for attr in attributes:
     obj = getattr(test_module, attr)
     if type(obj) is types.FunctionType:
         try:
@@ -65,7 +82,6 @@ for attr in dir(test_module):
             print obj.__name__ + ": ",
             print "CRASH/FAIL",
             print brown + '(' + str(e) + ')' + reset
-            print reset
 
 print '\n' + reset + "Testing complete."
 print "Passes: " + green + str(RO.passes()) + reset 
