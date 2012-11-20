@@ -1,3 +1,4 @@
+package abc;
 import java.util.Scanner;
 
 public abstract class RangeColor
@@ -23,7 +24,7 @@ public abstract class RangeColor
         // brightness *= .75;
 
         //On invalid input, return bright blue (a color not otherwise used).
-        if(color < 0 || color > 120 || brightness < 0 || brightness > 1) {
+        if(color < 0 || color > 120 || brightness < 0 || brightness > 100) {
             return "#0000ff"; 
         }
 
