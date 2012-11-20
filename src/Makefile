@@ -1,7 +1,7 @@
 BIN_DIR=../bin
 DOC_DIR=../doc
 
-CLASSES=RangeColor CreateHtml DisplayResult
+CLASSES=RangeColor CreateHtml DisplayResult Computation
 
 CP="../bin:."
 

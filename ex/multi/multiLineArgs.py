@@ -14,8 +14,9 @@ def isEqual(a,b):
 
 def isSameMagnitude(a,b):
 
-    if( pow(pow(a,2),0.5) ==
-        pow(pow(b,2),0.5)): return True
+    if( pow(pow(a,
+                 2),0.5) ==
+                 pow(pow(b,2),0.5)): return True
     else:
         return False
 

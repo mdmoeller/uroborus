@@ -4,7 +4,7 @@ import BPTsearchbug_instrumented as BPT
 import random
 target_module = BPT
 
-def randomTest():
+def randomTest(R):
     LIST = range(50)
 
     for trial in range(10):
