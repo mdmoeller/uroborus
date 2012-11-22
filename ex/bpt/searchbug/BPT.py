@@ -130,9 +130,10 @@ class Node:
         
 
 class BPT:
+    head = None
     def __init__(self, order, FILE=None):
         """ Create a B+ Tree of given order, where order is max size of any node. Min node size is int(order/2)"""
-        self.head = Node(d = order)
+        self.head = Node(d = order, L = [], C = [])
         
         # Allows you to input to the B+ Tree values from a file
         if FILE is not None:

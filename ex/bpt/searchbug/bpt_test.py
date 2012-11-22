@@ -1,23 +1,20 @@
 #!/usr/bin/python
 import BPT_instrumented as bpt
-from RuntimeOracle import RuntimeOracle
+target_module = bpt
 
-R = RuntimeOracle("BPT_passfail.txt")
-bpt.R=R
-
-parent=bpt.Node(3)
-parent.leaf=False
-l_child=bpt.Node(3)
-r_child=bpt.Node(3)
-
-l_child.elmts=[(0,0),(3,3)]
-r_child.elmts=[(4,4),(7,7),(15,15)]
-
-parent.elmts=[4]
-parent.chld=[l_child,r_child]
 #unit testing Node.search()
 #searching in a leaf node
-def searchLeaf():
+def searchLeaf(R):
+    parent=bpt.Node(3)
+    parent.leaf=False
+    l_child=bpt.Node(3)
+    r_child=bpt.Node(3)
+
+    l_child.elmts=[(0,0),(3,3)]
+    r_child.elmts=[(4,4),(7,7),(15,15)]
+
+    parent.elmts=[4]
+    parent.chld=[l_child,r_child]
     leaf_node=bpt.Node(3)
     leaf_node.elmts=[(0,0),(1,1),(2,2)]
     R.assertTrue(leaf_node.search(0)==0)
@@ -26,7 +23,7 @@ def searchLeaf():
     R.assertTrue(parent.search(-1)==None)
 
 #searching in a tree with a root node, its left and  right child nodes
-def searchTree():
+def searchTree(R):
     parent=bpt.Node(3)
     parent.leaf=False
     l_child=bpt.Node(3)
@@ -43,7 +40,7 @@ def searchTree():
     R.assertTrue(parent.search(-1)==None)
     
 #unit testing Node.insert()
-def insertIntoLeaf():
+def insertIntoLeaf(R):
     #insert without a node split
     leaf_node=bpt.Node(3)
     leaf_node.elmts=[(1,1)]
@@ -62,7 +59,7 @@ def insertIntoLeaf():
     R.assertTrue(split[2].elmts[0]==(2,2))
     R.assertTrue(split[2].elmts[1]==(3,3))
 
-def insertIntoTree():
+def insertIntoTree(R):
     parent=bpt.Node(3)
     parent.leaf=False
     l_child=bpt.Node(3)
@@ -85,16 +82,12 @@ def insertIntoTree():
     R.assertTrue(parent.chld[2].elmts[1]==(6,6))
 
 #unit testing BPT.add()
-def addToBPT(): 
+def addToBPT(R): 
     tree=bpt.BPT(2)
+    # tree.print_tree()
     for i in range(6):
         tree.add(i,i)
-
-#unit testing search using  BPT.search() and accessing fields
-def searchBPT():
-    tree=bpt.BPT(2)
-    for i in range(6):
-        tree.add(i,i)
+    # tree.print_tree()
     R.assertTrue(tree.head.elmts[0]==2)
     R.assertTrue(tree.head.elmts[1]==4)
     R.assertTrue(tree.head.chld[0].elmts[0]==(0,0))
@@ -103,15 +96,16 @@ def searchBPT():
     R.assertTrue(tree.head.chld[1].elmts[1]==(3,3))
     R.assertTrue(tree.head.chld[2].elmts[0]==(4,4))
     R.assertTrue(tree.head.chld[2].elmts[1]==(5,5))
+
+#unit testing search using  BPT.search() and accessing fields
+def searchBPT(R):
+    mtree=bpt.BPT(2)
+    # mtree.head.elmts = []
+    # mtree.print_tree()
+
     for i in range(6):
-	R.assertTrue( tree.search(i)==i)
+        mtree.add(i, str(i) + '*')
 
-def main():
-    searchLeaf()
-    searchTree()
-    insertIntoLeaf()
-    insertIntoTree()
-    addToBPT()
-    searchBPT()
-
-main() 
+    # mtree.print_tree()
+    for i in range(6):
+        R.assertTrue( mtree.search(i)==str(i) +'*')

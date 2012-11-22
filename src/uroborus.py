@@ -51,6 +51,12 @@ except:
 
 attributes = dir(test_module)
 
+# Compute the longest attribute name for pretty printing
+longest = 0
+for attr in attributes:
+    if len(attr) > longest:
+        longest = len(attr)
+
 # If there is an init method, call it first and remove it:
 if "init" in attributes:
     init = getattr(test_module, "init")
@@ -73,13 +79,13 @@ for attr in attributes:
             obj(RO)
             run_passed = RO.run_complete()
             print green if run_passed else red,
-            print obj.__name__ + ":\t",
+            print attr + " "*(longest + 2 - len(attr)),
             print "PASS" if run_passed else "FAIL",
             print reset
         except Exception as e:
             RO.except_fail()
             print red,
-            print obj.__name__ + ": ",
+            print attr + " "*(longest + 2 - len(attr)),
             print "CRASH/FAIL",
             print brown + '(' + str(e) + ')' + reset
 
