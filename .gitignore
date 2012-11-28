@@ -1,0 +1,11 @@
+*.pyc
+*~
+*_instrumented.py
+*.html
+*_passfail.txt
+*.class
+*_coverage.txt
+*.aux
+*.bbl
+*.blg
+*.log

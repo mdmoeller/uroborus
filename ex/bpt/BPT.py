@@ -9,9 +9,9 @@ class Node:
     #   elmts are keys, chld are Nodes
     # For leaves:
     #   Values are stored in elmts; chld = []
-    def __init__(self, L = [], C = [], leaf = True, d = 3):
-        self.elmts = L
-        self.chld = C
+    def __init__(self, L = None, C = None, leaf = True, d = 3):
+        self.elmts = [] if L is None else L
+        self.chld = [] if C is None else C
         self.leaf = leaf
         self.d = d
 
@@ -130,6 +130,7 @@ class Node:
         
 
 class BPT:
+    head = None
     def __init__(self, order, FILE=None):
         """ Create a B+ Tree of given order, where order is max size of any node. Min node size is int(order/2)"""
         self.head = Node(d = order)

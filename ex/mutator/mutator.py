@@ -5,9 +5,14 @@
 # Purpose: A rough, crude, amateur python code mutator
 
 arithChars = ['+', '-', '*', '/', '%']
+numCompareChars = ['<', '>', '<=', '>=']
+boolResultChars = ['True', 'False']
+boolCompareChars = ['or', 'and']
+eqCompareChars = ['==', '!=']
 
 def hasBool(line):
     
+    # to-do: refactor this mess
     andSplits = line.split(" and ")
     orSplits = line.split(" or ")
     LTSplits = line.split("<")
@@ -75,6 +80,11 @@ def isMutatable(line):
         return True
     else:
         return False
+###
+#
+# THIS ALLL NEEDS CONSOLIDATION BADLY
+#
+###
 
 # Mutates a line from the source, replacing the specified
 # operator with the other arithmatic operators
@@ -83,13 +93,107 @@ def mutateArith(line,op):
     # splits the line into pieces that flank the operator
     splits = line.split(" " + op + " ")
     
+    # the number of times the operator appears
+    instances = len(splits) - 1
+     
     # stores the mutated lines
     out = []
     
     # go over each split and change the one operator, creating 4
     # new lines per occurance of the targetted operator
+    for x in range (0, len(arithChars)):
+        if(arithChars[x] != op):
+            
+            # generates a mutation for each instance of the operator
+            # in the line
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op,  arithChars[x]))
     
     return out
+
+def mutateAugAssign(line,op):
+    
+    # splits the line into pieces that flank the operator
+    splits = line.split(" " + op + " ")
+    
+    # the number of times the operator appears
+    instances = len(splits) - 1
+     
+    # stores the mutated lines
+    out = []
+    
+    # go over each split and change the one operator, creating 4
+    # new lines per occurance of the targetted operator
+    for x in range (0, len(arithChars)):
+        if((arithChars[x] + "=") != op):
+            
+            # generates a mutation for each instance of the operator
+            # in the line
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op,  arithChars[x] + "="))
+    
+    return out
+
+def mutateCompare(line, op):
+    
+    splits = line.split(" " + op + " ")
+    
+    instances = len(splits) - 1
+    
+    out = []
+    
+    for x in range (0, len(compareChars)):
+        if(compareChars[x] != op):
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op, compareChars[x]))
+                
+    return out
+
+def mutateBoolCompare(line, op):
+    
+    splits = line.split(" " + op + " ")
+    
+    instances = len(splits) - 1
+    
+    out = []
+    
+    for x in range (0, len(boolCompareChars)):
+        if(boolCompareChars[x] != op):
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op, boolCompareChars[x]))
+                
+    return out
+
+def mutateBoolResult(line, op):
+    
+    splits = line.split(" " + op + " ")
+    
+    instances = len(splits) - 1
+    
+    out = []
+    
+    for x in range (0, len(boolCompareChars)):
+        if(boolResultChars[x] != op):
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op, boolResultChars[x]))
+                
+    return out
+
+def mutateEqCompare(line, op):
+    
+    splits = line.split(" " + op + " ")
+    
+    instances = len(splits) - 1
+    
+    out = []
+    
+    for x in range (0, len(boolCompareChars)):
+        if(eqCompareChars[x] != op):
+            for y in range (1, instances + 1):
+                out.append(mutateLineAt(splits, y, op, eqCompareChars[x]))
+                
+    return out
+
 
 # Recursive function that takes goes over the current split
 # of the line, replacing the target instance of the operator
@@ -113,3 +217,20 @@ def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
                                                                 targetOp, replaceOp)
 
 
+def createMutatedLines(path):
+
+    # File that handles source code extraction
+    source = open(path, 'r')
+
+    # Stores the name of the file for metadata generation.
+    fileName = path[:-3]
+    
+    lines = source.readlines()
+    mutatableLines = []
+    
+    # iterates over the lines, keeping track of the mutatable ones
+    for x in range (0, len(lines)):
+        if(isMutatable(lines[x])):
+            mutatableLines.append(x)
+            
+    

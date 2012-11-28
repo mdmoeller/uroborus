@@ -1,17 +1,15 @@
 #!/usr/bin/python
 
 import hello_instrumented as hello
+target_module = hello
 
-from RuntimeOracle import RuntimeOracle
+def testFun(runtime):
+    funResult = hello.fun()
 
-R = RuntimeOracle("hello_passfail.txt")
+    runtime.assertTrue( 0 == funResult ) # should pass
 
-hello.R = R
 
-funResult = hello.fun()
+def testSix(runtime):
+    sixResult = hello.six()  
 
-R.assertTrue( 0 == funResult ) # should pass
-
-sixResult = hello.six()  
-
-R.assertTrue( 6 == sixResult ) # should fail
+    runtime.assertTrue( 6 == sixResult ) # should fail

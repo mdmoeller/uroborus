@@ -112,7 +112,7 @@ def learned_tree( X, Y ):
                 best_thresh = thresh
 
 
-    print "Best Thresh: ", best_thresh, "\nSplit on: ", split_on_attr, "\n\n"
+    # print "Best Thresh: ", best_thresh, "\nSplit on: ", split_on_attr, "\n\n"
 
     lowX = []
     lowY = []

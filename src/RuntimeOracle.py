@@ -6,8 +6,9 @@ class RuntimeOracle:
     and in writes the results to a file. 
     """
 
+    pass_count = 0
+    fail_count = 0
     run = 0
-    continuation = False
     current_run = True
 
     def __init__(self, datafile):
@@ -17,19 +18,31 @@ class RuntimeOracle:
     def getRunNum(self):
         return self.run
 
-    def assertTrue(self, expr, nextRun=True):
-
+    # assertTrue now NEVER increments run.
+    # The uroborus module will call run_complete to delineate runs, which will happen
+    # after each test method is called.
+    def assertTrue(self, expr):
         boolResult = bool(expr) # In case we got some other nonsense
+        self.current_run = self.current_run and boolResult
 
-        # In case assert has already been called for this run, we 'and' the results
-        if self.continuation:
-            self.current_run = self.current_run and boolResult
+    def run_complete(self):
+        if self.current_run:
+            self.pass_count += 1
+            self.FILE.write(str(self.run) + '\t' + str(1) + '\n')
         else:
-            self.current_run = boolResult
+            self.fail_count += 1
+            self.FILE.write(str(self.run) + '\t' + str(0) + '\n')
+        self.run = self.run + 1
+        this_run = self.current_run
+        self.current_run = True
+        return this_run
 
-        if nextRun:
-            self.FILE.write(str(self.run) + '\t' + str(1 if self.current_run else 0) + '\n')
-            self.run = self.run + 1
-            self.continuation = False
-        else:
-            self.continuation = True
+    def except_fail(self):
+        self.current_run = False
+        self.run_complete()
+
+    def passes(self):
+        return self.pass_count
+
+    def fails(self):
+        return self.fail_count

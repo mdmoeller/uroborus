@@ -25,7 +25,7 @@ class Node:
             return None
 
         for i in range(len(self.elmts)):
-            if key < self.elmts[i]:   # THIS IS A BUG!!! SHOULD BE <, not <=
+            if key < self.elmts[i]:  
                 return self.chld[i].search(key)
 
         return self.chld[-1].search(key)
@@ -67,7 +67,7 @@ class Node:
                     correct_child = self.chld[i]
                     break
             if correct_child is None:
-                correct_child = self.chld[-2] # THIS IS THE BUG!!! Should be -1, not -2
+                correct_child = self.chld[-1]
 
             # Recurse on that subtree, and incorporate a split
             #  if that subtree needed to do one.
@@ -85,7 +85,7 @@ class Node:
 
             cut = int(size / 2.0 + 0.5) # Cut evenly, with extra one on the left for odd size
             # print cut
-            if self.leaf:
+            if not self.leaf:  # BUG: "not" should not be there!
                 left = Node(self.elmts[:cut], [], leaf=True, d = self.d)
                 # print "left" + str(left)
                 right = Node(self.elmts[cut:], [], leaf=True, d = self.d)
@@ -96,7 +96,7 @@ class Node:
                 left = Node(self.elmts[:cut-1], self.chld[:cut], leaf=False, d = self.d)
                 right = Node(self.elmts[cut:], self.chld[cut:], leaf=False, d = self.d)
                 key = self.elmts[cut-1]  # (already key only) from right-most of left cut
-                return (left, key, right)
+                return (left, key, right) 
 
         # Don't need to split, just return
         else:
@@ -130,9 +130,10 @@ class Node:
         
 
 class BPT:
+    head = None
     def __init__(self, order, FILE=None):
         """ Create a B+ Tree of given order, where order is max size of any node. Min node size is int(order/2)"""
-        self.head = Node(d = order)
+        self.head = Node(d = order, L = [], C = [])
         
         # Allows you to input to the B+ Tree values from a file
         if FILE is not None:

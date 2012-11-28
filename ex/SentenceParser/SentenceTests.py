@@ -5,21 +5,17 @@
 # Purpose: tests the SentenceParser class and its functions
 
 import SentenceParser_instrumented as SentenceParser
+target_module = SentenceParser
 
-from RuntimeOracle import RuntimeOracle
+def test_string(R):
+    string = "Hello, world."
 
-R = RuntimeOracle("SentenceParser_passfail.txt")
-SentenceParser.R = R
+    # these should all pass
+    R.assertTrue(SentenceParser.spaceCounter(string) == 1)
+    R.assertTrue(SentenceParser.firstSpace(string) == 6)
+    R.assertTrue(SentenceParser.firstWord(string) == "Hello,")
 
-string = "Hello, world."
+    parses = SentenceParser.wordsFromSentence(string)
 
-# these should all pass
-
-R.assertTrue(SentenceParser.spaceCounter(string) == 1)
-R.assertTrue(SentenceParser.firstSpace(string) == 6)
-R.assertTrue(SentenceParser.firstWord(string) == "Hello,")
-
-parses = SentenceParser.wordsFromSentence(string)
-
-R.assertTrue(parses[0] == SentenceParser.firstWord(string))
-R.assertTrue(parses[1] == "world.")
+    R.assertTrue(parses[0] == SentenceParser.firstWord(string))
+    R.assertTrue(parses[1] == "world.")
