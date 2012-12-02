@@ -5,7 +5,7 @@
 # modified: Mark Moeller 24 Oct.
 # modified: Samarth Kishore 10/30/2012
 # modified: Mark 31 Oct.
-# modified: Samarth Kishore 10/31/2012
+# modified: Samarth Kishore 10/31/2012, 12/01/2012
 import re, sys
 
 
@@ -96,10 +96,10 @@ def coupleLine(line, lineNum, do_not_instrument_lvl = 0):
 
     # Finally, this is where we instrument:
 
-    # Special case for "else" statements
+    # Special case for "else" and "try" statements
     # NOTE: This assumes no statements in-line the else clause, which is technically valid python,
     #     but considered bad style, so we will not accept it for now.
-    if line.strip() == "else:": 
+    if line.strip() == "else:" or line.strip() == "try:" or line.strip() == "except:" or "elif" in line.strip(): 
         return ("\n" + line, newDNILvl)
 
     # grabs all of the tabs associated with the line via regex
