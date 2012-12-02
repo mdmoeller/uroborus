@@ -25,6 +25,9 @@ class RuntimeOracle:
         boolResult = bool(expr) # In case we got some other nonsense
         self.current_run = self.current_run and boolResult
 
+    def assertEquals(self, arg1, arg2):
+        return self.assertTrue(arg1 == arg2)
+
     def run_complete(self):
         if self.current_run:
             self.pass_count += 1

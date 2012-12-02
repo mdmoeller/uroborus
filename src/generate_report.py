@@ -14,12 +14,12 @@ def html_color(color, brightness=1.0):
         print color, brightness
         return "#0000ff"
 
-    adjusted_brightness = 0.75 * brightness
+    # adjusted_brightness = 0.75 * brightness
 
     html_color = "#"
 
     # Compute red and append
-    red = int(min(-255.0 * color / 60.0 + 510, 255.0) * adjusted_brightness)
+    red = int(min(-255.0 * color / 60.0 + 510, 255.0) * brightness)
     red_hex = hex(red)[2:]
     if len(red_hex) == 1:
         red_hex = "0" + red_hex
@@ -28,7 +28,7 @@ def html_color(color, brightness=1.0):
 
 
     # Compute green and append
-    green = int(min(255.0 * color / 60.0, 255.0) * adjusted_brightness)
+    green = int(min(255.0 * color / 60.0, 255.0) * brightness)
     green_hex = hex(green)[2:]
     if len(green_hex) == 1:
         green_hex = "0" + green_hex
@@ -52,7 +52,8 @@ def compute_color(pct_passed, pct_failed):
 def compute_brightness(pct_passed, pct_failed):
     """Computes a brightness value between 0 and 1 according to the formula in the Tarantula paper. """
 
-    return max(pct_passed, pct_failed)
+    # return max(pct_passed, pct_failed)
+    return 1
 
 
 def main():

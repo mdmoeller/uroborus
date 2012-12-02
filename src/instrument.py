@@ -96,10 +96,10 @@ def coupleLine(line, lineNum, do_not_instrument_lvl = 0):
 
     # Finally, this is where we instrument:
 
-    # Special case for "else" and "try" statements
+    # Special case for "elif" and "else" statements
     # NOTE: This assumes no statements in-line the else clause, which is technically valid python,
     #     but considered bad style, so we will not accept it for now.
-    if line.strip() == "else:" or line.strip() == "try:" or "except" in line.strip() or "elif" in line.strip(): 
+    if line.strip() == "else:" or line.strip()[:4] == "elif" or line.strip()[:6] == "except":
         return ("\n" + line, newDNILvl)
 
     # grabs all of the tabs associated with the line via regex
