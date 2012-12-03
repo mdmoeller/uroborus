@@ -49,3 +49,6 @@ class RuntimeOracle:
 
     def fails(self):
         return self.fail_count
+
+    def tests_complete(self):
+        self.FILE.close()

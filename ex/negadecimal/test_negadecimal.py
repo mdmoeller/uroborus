@@ -1,5 +1,6 @@
-import negadecimal_instrumented as negadecimal
-target_module=negadecimal
+import urotest
+
+negadecimal = urotest.uro_import('negadecimal')
 
 
 def test_to_negadecimal(R):

@@ -178,6 +178,12 @@ def makeInstrumFile(path):
 
 def main():
     args = sys.argv
+
+    # In case we are being imported, then we don't 
+    # want to do anything
+    if 'instrument' not in args[0]:
+        return
+
     if len(args) != 2:
         print "usage: instrument.py <source filename>"
         sys.exit(1)

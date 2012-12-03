@@ -1,11 +1,12 @@
 #!/usr/bin/python
-
 import sys
 import os
 import types
 import importlib
 import traceback
+import urotest
 from RuntimeOracle import RuntimeOracle
+from subprocess import call
 
 sys.path.append(os.getcwd())
 
@@ -29,7 +30,7 @@ test_module_name = ''.join(test_module_filename.split('.')[:-1])
 # Place UROBORUS test module constraints here.
 for line in open(test_module_filename, 'r').readlines():
 
-    # Constraint on importing from ... *
+    # You MAY NOT use "from ... import *" in an UROBORUS test suite
     if line.strip()[:4] == "from" and line.strip()[-1:] == "*":
         sys.stderr.write('uroborus: "from ... import *" statements are not allowed in Uroborus tests. Packages must be imported and used by name.\n')
         sys.exit(2)
@@ -50,13 +51,12 @@ except Exception as e:
 
 # Now prepare to run the tests
 try:
-    target_module = test_module.target_module
-    passfail_filename = ''.join(target_module.__name__.split('_')[:-1]) + "_passfail.txt"
+    non_instrum_target_name = ''.join(urotest.target.__name__.split('_')[:-1])
+    passfail_filename = non_instrum_target_name + "_passfail.txt"
     RO = RuntimeOracle(passfail_filename)
-    target_module.R = RO
+    urotest.target.R = RO
 except:
-    sys.stderr.write("uroborus: Test module must define which module is being tested by setting a 'target_module' variable\n")
-    sys.exit(4)
+    raise
 
 
 attributes = dir(test_module)
@@ -107,3 +107,11 @@ for attr in attributes:
 print '\n' + reset + "Testing complete."
 print "Passes: " + green + str(RO.passes()) + reset 
 print "Fails: " + red + str(RO.fails()) + '\n\n' + reset
+
+# Close out the open files
+RO.tests_complete()
+urotest.target.f.close()
+
+# Generate the HTML report!
+javacmd = 'java DisplayResult ' + non_instrum_target_name
+call(javacmd, shell=True)
