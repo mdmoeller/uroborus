@@ -11,6 +11,8 @@ boolResultChars = ['True', 'False']
 boolCompareChars = ['or', 'and']
 eqCompareChars = ['==', '!=']
 
+ops = [arithChars, augAssignChars, numCompareChars, boolResultChars, boolCompareChars, eqCompareChars]
+
 def hasBool(line):
     
     # to-do: refactor this mess
@@ -222,6 +224,43 @@ def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
                                                                 targetOp, replaceOp)
 
 
+def getOpType(op):
+    
+    # checks to see which array the op is in
+    for i in range (0, len(ops)):
+        if(op in ops[i]):
+            return i
+    
+    # if we get here, we got problems
+    return -1
+
+def getMutatableOps(line):
+    
+    # Holds the mutatable operators in a given line
+    out = []
+    
+    # Goes into each array of operators, splitting the line on each
+    for i in range (0, len(ops)):
+        for j in range (0, len(ops[i])):
+            
+            # splits the line on the operator
+            splits = line.split(" " + ops[i][j] + " ")
+            if(len(splits) > 1):
+                # appends the operator to the output if there is more than one split
+                out.append(ops[i][j])
+    
+    return out
+
+def getNumOfInstances(line, mutOps):
+    
+    # stores the number of instances of each operator
+    out = []
+    
+    for i in range (0, len(mutOps)):
+        out.append(len(line.split(" " + mutOps[i] + " ")))
+        
+    return out
+
 def generateMutationPoints(path):
 
     # File that handles source code extraction
@@ -230,15 +269,45 @@ def generateMutationPoints(path):
     # Stores the name of the file for metadata generation.
     fileName = path[:-3]
     
+    # Counter for the total number of mutants
+    mutantNumber = 0
+    
     # Stores the lines of the source code
     lines = source.readlines()
-    
-    # initially empty array stores the mutatable lines numbers
-    mutatableLines = []
     
     # iterates over the lines, keeping track of the mutatable ones
     for x in range (0, len(lines)):
         if(isMutatable(lines[x])):
-            mutatableLines.append(x)
-    
-    
+            
+            # stores the operators in the line and their instances
+            mutatables = getMutatableOps(lines[x])
+            instances = getNumOfInstances(lines[x], mutatables)
+            
+            # creates the mutated files for this line
+            for y in range(0, len(mutatables)):
+                
+                # creates mutants per instance
+                for z in range(1, instances[y]+1):
+                    
+                    # array containing possible mutant opertaotrs for the target op
+                    newOps = ops[getOpType(mutatables[y])]
+                    
+                    #creates a mutant per operator mutation
+                    for w in range(0, len(newOps)):
+                        
+                        # Duplicates aren't mutants, obviously
+                        if(newOps[w] != mutatables[y]):
+                            
+                            mutant = open(fileName + "_mutant" + mutantNumber + ".py", 'w')
+                            
+                            # copies the source code
+                            mutantSource = lines[:]
+                            
+                            # replaces source line with the copy
+                            mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " ", z, 
+                                                                                 mutatables[y], newOps[w])
+                            
+                            mutant.writelines(mutantSource)
+                            
+                            # bumps up the mutant ID
+                            mutantNumber += 1
