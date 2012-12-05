@@ -200,19 +200,23 @@ def mutateEqCompare(line, op):
 # with the new operator
 def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
     
+    # No splits, just the rest of the line
     if(len(splits) == 1):
         return splits[0]
     
+    # Replacement has occurred, returning the rest of the line as is
     if(instanceNum == 0):
         return splits[0] + " " + targetOp + " " +  mutateLineAt(splits[1:], 0, \
                                                                     targetOp, \
                                                                     replaceOp)
     
+    # At the replacement instance, replace target operator with new operator.
     if(instanceNum == 1):
         return splits[0] + " " + replaceOp + " " +  mutateLineAt(splits[1:], 0, \
                                                                     targetOp, \
                                                                     replaceOp)
     
+    # Count down until the operator we wish to replace is reached
     return splits[0] + " " + targetOp + " " +  mutateLineAt(splits[1:], instanceNum-1,\
                                                                 targetOp, replaceOp)
 
@@ -225,12 +229,15 @@ def createMutatedLines(path):
     # Stores the name of the file for metadata generation.
     fileName = path[:-3]
     
+    # Stores the lines of the source code
     lines = source.readlines()
+    
+    # initially empty array stores the mutatable lines numbers
     mutatableLines = []
     
     # iterates over the lines, keeping track of the mutatable ones
     for x in range (0, len(lines)):
         if(isMutatable(lines[x])):
             mutatableLines.append(x)
-            
+    
     
