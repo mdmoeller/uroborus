@@ -222,7 +222,7 @@ def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
                                                                 targetOp, replaceOp)
 
 
-def createMutatedLines(path):
+def generateMutationPoints(path):
 
     # File that handles source code extraction
     source = open(path, 'r')
