@@ -5,6 +5,7 @@
 # Purpose: A rough, crude, amateur python code mutator
 
 arithChars = ['+', '-', '*', '/', '%']
+augAssignChars = ['+=', '-=', '*=', '/=', '%=']
 numCompareChars = ['<', '>', '<=', '>=']
 boolResultChars = ['True', 'False']
 boolCompareChars = ['or', 'and']
@@ -125,12 +126,12 @@ def mutateAugAssign(line,op):
     # go over each split and change the one operator, creating 4
     # new lines per occurance of the targetted operator
     for x in range (0, len(arithChars)):
-        if((arithChars[x] + "=") != op):
+        if((augAssignChars[x]) != op):
             
             # generates a mutation for each instance of the operator
             # in the line
             for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op,  arithChars[x] + "="))
+                out.append(mutateLineAt(splits, y, op,  augAssignChars[x]))
     
     return out
 
