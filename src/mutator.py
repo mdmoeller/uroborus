@@ -4,6 +4,8 @@
 # Date: 7 November 12
 # Purpose: A rough, crude, amateur python code mutator
 
+import sys
+
 arithChars = ['+', '-', '*', '/', '%']
 augAssignChars = ['+=', '-=', '*=', '/=', '%=']
 numCompareChars = ['<', '>', '<=', '>=']
@@ -298,16 +300,25 @@ def generateMutationPoints(path):
                         # Duplicates aren't mutants, obviously
                         if(newOps[w] != mutatables[y]):
                             
-                            mutant = open(fileName + "_mutant" + mutantNumber + ".py", 'w')
+                            mutantName = fileName + "_mutant" + str(mutantNumber) + ".py"
+                            
+                            mutant = open(mutantName, 'w')
                             
                             # copies the source code
                             mutantSource = lines[:]
                             
                             # replaces source line with the copy
-                            mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " ", z, 
+                            mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " "), z, 
                                                                                  mutatables[y], newOps[w])
                             
                             mutant.writelines(mutantSource)
                             
                             # bumps up the mutant ID
                             mutantNumber += 1
+
+
+if(len(sys.argv) != 2):
+    print "Usage: mutator.py <src>"
+    sys.exit(1)
+
+generateMutationPoints(sys.argv[1])
