@@ -1,10 +1,11 @@
-# !/usr/bin/python
+#!/usr/bin/python
 
 # Author: Dan Klein
 # Date: 7 November 12
 # Purpose: A rough, crude, amateur python code mutator
 
 import sys
+from subprocess import call
 
 arithChars = ['+', '-', '*', '/', '%']
 augAssignChars = ['+=', '-=', '*=', '/=', '%=']
@@ -267,6 +268,13 @@ def generateMutationPoints(path):
 
     # File that handles source code extraction
     source = open(path, 'r')
+    
+    # creates directory to store mutated code
+    call(["mkdir", "-p", "mutants"])
+    call("rm -f mutants/*", shell = True)
+    
+    # File that logs all of the mutations
+    mutantLog = open("mutants/mutants.txt", 'w')
 
     # Stores the name of the file for metadata generation.
     fileName = path[:-3]
@@ -278,7 +286,7 @@ def generateMutationPoints(path):
     lines = source.readlines()
     
     # iterates over the lines, keeping track of the mutatable ones
-    for x in range (0, len(lines)):
+    for x in range (len(lines)):
         if(isMutatable(lines[x])):
             
             # stores the operators in the line and their instances
@@ -286,22 +294,24 @@ def generateMutationPoints(path):
             instances = getNumOfInstances(lines[x], mutatables)
             
             # creates the mutated files for this line
-            for y in range(0, len(mutatables)):
+            for y in range(len(mutatables)):
                 
                 # creates mutants per instance
-                for z in range(1, instances[y]+1):
+                for z in range(1, instances[y]):
                     
                     # array containing possible mutant opertaotrs for the target op
                     newOps = ops[getOpType(mutatables[y])]
                     
                     #creates a mutant per operator mutation
-                    for w in range(0, len(newOps)):
+                    for w in range(len(newOps)):
                         
                         # Duplicates aren't mutants, obviously
                         if(newOps[w] != mutatables[y]):
                             
-                            mutantName = fileName + "_mutant" + str(mutantNumber) + ".py"
+                            # number of the mutant is stored int he file name
+                            mutantName = "mutants/mutant" + str(mutantNumber) + ".py"
                             
+                            # creates file to store mutated code
                             mutant = open(mutantName, 'w')
                             
                             # copies the source code
@@ -310,11 +320,19 @@ def generateMutationPoints(path):
                             # replaces source line with the copy
                             mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " "), z, 
                                                                                  mutatables[y], newOps[w])
-                            
+                            # write the mutated code
                             mutant.writelines(mutantSource)
+                            
+                            # logs the mutation
+                            mutantLog.write(str(mutantNumber) + "\t" + str(x) + "\t" + mutatables[y] + "\t"
+                                            + newOps[w] + "\t" + str(z) + "\n")
+                            
+                            mutant.close()
                             
                             # bumps up the mutant ID
                             mutantNumber += 1
+    
+    mutantLog.close()
 
 
 if(len(sys.argv) != 2):
