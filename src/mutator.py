@@ -206,9 +206,9 @@ def mutateEqCompare(line, op):
 # with the new operator
 def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
     
-    # No splits, just the rest of the line
+    # No splits, just the rest of the line and a comment noting the mutation
     if(len(splits) == 1):
-        return splits[0]
+        return splits[0][:-1] + " # THIS LINE HAS BEEN MUTATED\n"
     
     # Replacement has occurred, returning the rest of the line as is
     if(instanceNum == 0):
@@ -320,11 +320,12 @@ def generateMutationPoints(path):
                             # replaces source line with the copy
                             mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " "), z, 
                                                                                  mutatables[y], newOps[w])
+                            
                             # write the mutated code
                             mutant.writelines(mutantSource)
                             
                             # logs the mutation
-                            mutantLog.write(str(mutantNumber) + "\t" + str(x) + "\t" + mutatables[y] + "\t"
+                            mutantLog.write(str(mutantNumber) + "\t" + str(x + 1) + "\t" + mutatables[y] + "\t"
                                             + newOps[w] + "\t" + str(z) + "\n")
                             
                             mutant.close()
