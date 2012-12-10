@@ -23,18 +23,8 @@
 
 
 \title{Fault Localization with Uroborus}
-\author{Samarth Kishore
-    %%samarthk@seas.upenn.edu
-\and 
-Daniel Klein
-    %%kleindan@seas.upenn.edu
-\and 
-Mark Moeller
-    %%mmoeller@seas.upenn.edu
-\and 
-Twisha Shah
-    %%twisha@seas.upenn.edu
-}
+\author{Samarth Kishore \and Daniel Klein \and Mark Moeller \and Twisha Shah \and
+\{samarthk, kleindan, mmoeller, twisha\}@seas.upenn.edu}
 
 
 
@@ -68,7 +58,7 @@ considered for further improvement of the tool.
 
 %%This will produce a file called \fcip\  which is the instrumented version of the source.
 
-\section{Creating \Uro Test Modules}
+\section{Creating \Uro\ Test Modules}
 
 A developer first needs to create \Uro-style tests for \fc. To do that, we just have to write a
 module, say \fcT, that has the following header:\\
@@ -86,13 +76,18 @@ Each method of the test suite should take one parameter, and that parameter is t
 \texttt{RuntimeOracle} that will be used for that test case.
 
 The developer may optionally include a method called \texttt{init} if some intial set up is
-required. \Uro will run \texttt{init} if it exists before any other tests in the module.
+required. \Uro\ will run \texttt{init} if it exists before any other tests in the module.
 
+Note that \emph{any} methods at the package level in \fcT\ will be
+assumed to be an \Uro\ test that takes a RuntimeOracle as an argument.
+If a helper method is required for one or more test methods, it should
+be encapsulated within a class in \fcT\ so that it is not run directly
+as an \Uro\ test.
 
 \section{Localizing Faults}
 
 Next, the developer runs the tests. This is done with:\\
-
+ 
 \texttt{\$ uroborus }\fcT \\
 
 The module-level methods will each be

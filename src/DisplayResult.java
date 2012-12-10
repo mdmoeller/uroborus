@@ -1,8 +1,4 @@
-
-package abc;
-
 import java.io.*;
-
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -17,39 +13,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 class DisplayResult
 {
-public static void main(String args[]) throws Exception
-{
-	String f1=null;
-	int line_number=0;
-	if(args.length!=0)
-	{
-		f1=args[0];
-		line_number=Integer.parseInt(args[1]);
-		
-	}
-    Computation cc=new Computation(f1);
-    cc.codeToString();
-   
-    cc.getCount();
-    cc.pfArray();
-    //cc.seePFArray();
-    cc.pfCal();
-    cc.statementPassFail();
-    cc.getColorValue();
-    if(line_number!=0)
+    public static void main(String args[]) throws Exception
     {
-    	System.out.println(line_number);
-    	cc.createMutantFile(f1, line_number);
+        String f1=null;//, f2=null, f3=null;
+        if(args.length!=0)
+        {
+            f1=args[0];
+            /*f2=args[1];
+              f3=args[2];*/
+        }
+        Computation cc=new Computation(f1);
+        cc.codeToString();
+        //cc.seeCode();
+        cc.getCount();
+        cc.pfArray();
+        //cc.seePFArray();
+        cc.pfCal();
+        cc.statementPassFail();
+        cc.getColorValue();
+        cc.createOutput(f1);    
+
     }
-    	
-    cc.createOutput(f1);    
-    
 }
-}
-
-
-
-

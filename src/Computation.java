@@ -1,6 +1,3 @@
-
-package abc;
-
 import java.io.*;
 
 import java.text.DecimalFormat;
