@@ -41,7 +41,7 @@ public static void main(String args[]) throws Exception
     cc.getColorValue();
     if(line_number!=0)
     {
-    	System.out.println(line_number);
+    //	System.out.println(line_number);
     	cc.createMutantFile(f1, line_number);
     }
     	
