@@ -1,4 +1,4 @@
-# !/usr/bin/python
+#!/usr/bin/python
 
 # Author: Dan Klein
 # Date: 7 November 12
@@ -223,7 +223,7 @@ def mutateLineAt(splits, instanceNum, targetOp, replaceOp):
     
     # Count down until the operator we wish to replace is reached
     return splits[0] + " " + targetOp + " " +  mutateLineAt(splits[1:], instanceNum-1,\
-                                                                targetOp, replaceOp)
+                                                                targetOp, replaceOp) 
 
 
 def getOpType(op):
@@ -278,7 +278,7 @@ def generateMutationPoints(path):
     lines = source.readlines()
     
     # iterates over the lines, keeping track of the mutatable ones
-    for x in range (0, len(lines)):
+    for x in range(len(lines)):
         if(isMutatable(lines[x])):
             
             # stores the operators in the line and their instances
@@ -286,7 +286,7 @@ def generateMutationPoints(path):
             instances = getNumOfInstances(lines[x], mutatables)
             
             # creates the mutated files for this line
-            for y in range(0, len(mutatables)):
+            for y in range(len(mutatables)):
                 
                 # creates mutants per instance
                 for z in range(1, instances[y]+1):
@@ -295,7 +295,7 @@ def generateMutationPoints(path):
                     newOps = ops[getOpType(mutatables[y])]
                     
                     #creates a mutant per operator mutation
-                    for w in range(0, len(newOps)):
+                    for w in range(len(newOps)):
                         
                         # Duplicates aren't mutants, obviously
                         if(newOps[w] != mutatables[y]):

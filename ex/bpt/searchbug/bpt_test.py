@@ -1,6 +1,6 @@
 #!/usr/bin/python
-import BPT_instrumented as bpt
-target_module = bpt
+import urotest
+bpt = urotest.uro_import('BPT')
 
 #unit testing Node.search()
 #searching in a leaf node
