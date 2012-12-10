@@ -1,5 +1,5 @@
 
-// package abc;
+package abc;
 
 import java.io.*;
 
@@ -22,22 +22,29 @@ class DisplayResult
 {
 public static void main(String args[]) throws Exception
 {
-	String f1=null;//, f2=null, f3=null;
+	String f1=null;
+	int line_number=0;
 	if(args.length!=0)
 	{
 		f1=args[0];
-		/*f2=args[1];
-		f3=args[2];*/
+		line_number=Integer.parseInt(args[1]);
+		
 	}
     Computation cc=new Computation(f1);
     cc.codeToString();
-    //cc.seeCode();
+   
     cc.getCount();
     cc.pfArray();
     //cc.seePFArray();
     cc.pfCal();
     cc.statementPassFail();
     cc.getColorValue();
+    if(line_number!=0)
+    {
+    	System.out.println(line_number);
+    	cc.createMutantFile(f1, line_number);
+    }
+    	
     cc.createOutput(f1);    
     
 }

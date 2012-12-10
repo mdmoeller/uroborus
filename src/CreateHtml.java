@@ -30,10 +30,10 @@ public class CreateHtml {
   
   out.write("var numbers = /^[0-9]+$/;  ");
  out.write(" if(b.match(numbers))  ");
-   //out.write("    { return true;}");  
+   
    out.write("{ var c=parseInt(b);");
    out.write("if(c<0 || c>120)");
-    out.write("   {alert(\"Please enter a number in the range [0,120]!\"); }}"); //}</script></head>"); 
+    out.write("   {alert(\"Please enter a number in the range [0,120]!\"); }}"); 
         out.write("else {alert(\"Please enter a valid number!\");}}");
         out.write("</script></head>");
   out.write("<body>");
@@ -41,8 +41,8 @@ public class CreateHtml {
   out.write("<form name=\"form1\" action=\"#\">");
   out.write("<div align=\"center\">Threshold value: <input type=\"text\" name=\"threshold\"><br><input type=\"submit\" onclick=\"validate()\" value=\"Change\" /><br></div>");
   
-  //out.write("<FONT size=\"5\" STYLE=\"background-color:#A4A4A4\" >Comments</font><br><br><br>");
-  //out.write("<center>");
+  
+ 
   
  
   String str=null;
@@ -78,7 +78,7 @@ String sentence=null;
             }
             else
             {	
-            	//System.out.println("Color value= "+col[i]);	//Brightness value= "+bright[i]);
+            	
             shade=RangeColor.htmlColor(col[i]);
            
             sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"; 
@@ -90,7 +90,7 @@ String sentence=null;
         	sentence+="</span></FONT><br>";
             
             }        
-            //System.out.println(str);
+            
             out.write(sentence); 
     		
         }	

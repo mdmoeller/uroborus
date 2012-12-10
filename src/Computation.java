@@ -1,5 +1,5 @@
 
-// package abc;
+package abc;
 
 import java.io.*;
 
@@ -16,9 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 
 
@@ -154,7 +151,7 @@ public void pfArray() throws IOException
         }	
         
       
-        //System.out.println();
+      
         
 }
 
@@ -177,18 +174,9 @@ public void pfCal() throws IOException
         	else pass++;
         }
         
-        //System.out.println("Passes="+pass+"   Fails="+fail);
+      
         buffered_reader1.close();
-
-        //We cannot compute percentages if either
-        //  - no cases failed
-        //  - no cases passed
-        if(pass == 0 || fail == 0) 
-        {
-            System.err.println("DisplayResult: Cannot generate report for 100% failures or 100% passes");
-            System.exit(1);
-        }
-        
+      
 }
 
 
@@ -212,13 +200,13 @@ public void statementPassFail() throws IOException
       while(str2!=null)
         {
     	  	flag=false;
-        	//System.out.println("Statement:"+str2);
+        	
     	  	for(int i=0;i<=r;i++)
         	{		
-        		//System.out.println("i="+i);
+        		
     	  		if(str2.equals(temp_array[i]))
         		{
-        			//str2=br2.readLine();
+        			
         			flag=true;
         			//System.out.println(temp_array[i]);
         			//System.out.println("flag="+flag);
@@ -274,8 +262,6 @@ public void getColorValue()
         
         double ppassed=((double)p/(double)pass);
         double pfailed=((double)f/(double)fail);
-
-
         
         //System.out.println("Ppassed="+ppassed+";Pfailed="+pfailed);
         
@@ -331,6 +317,24 @@ public void getColorValue()
         
     }
     
+}
+
+public void createMutantFile(String file_name, int line_number) throws IOException
+{
+	int sum=0;
+	for(int i=1;i<code.length;i++)
+	{
+		if(i!=line_number)
+			sum+=col[i];
+	}
+	int average=sum/code.length;
+	String mutantFileName=file_name+"_colors.txt";
+	FileWriter fwriter=new FileWriter(mutantFileName, true);
+	BufferedWriter writer = new BufferedWriter(fwriter);
+	writer.write(average+"\t"+col[line_number]);
+	writer.newLine();
+	System.out.println(average+"   "+col[line_number]);
+	writer.close();
 }
 
 
