@@ -7,10 +7,15 @@ import traceback
 import urotest
 from RuntimeOracle import RuntimeOracle
 from subprocess import call
+from optparse import OptionParser
+
+parser = OptionParser()
+
+parser.add_option('-s', '--skipreport', action='store_true', dest='skipreport', help='Skip generating the html report')
+
+(options, args) = parser.parse_args()
 
 sys.path.append(os.getcwd())
-
-args = sys.argv
 
 # Define terminal colors:
 red = '\033[0;31m'
@@ -19,11 +24,11 @@ reset = '\033[0;0m'
 brown = '\033[0;33m'
 
 # Wrong number of args: Complain and quit
-if len(args) != 2:
+if len(args) != 1:
     sys.stderr.write("Usage: uroborus.py <test case file>\n")
     sys.exit(1)
 
-test_module_filename = args[1]
+test_module_filename = args[0]
 test_module_name = ''.join(test_module_filename.split('.')[:-1])
 
 
@@ -112,6 +117,7 @@ print "Fails: " + red + str(RO.fails()) + '\n\n' + reset
 RO.tests_complete()
 urotest.target.f.close()
 
-# Generate the HTML report!
-javacmd = 'java DisplayResult ' + non_instrum_target_name
-call(javacmd, shell=True)
+if not options.skipreport:
+    # Generate the HTML report!
+    javacmd = 'java DisplayResult ' + non_instrum_target_name + ' ' #ADD LINENUMBER OF MUTANT
+    call(javacmd, shell=True)

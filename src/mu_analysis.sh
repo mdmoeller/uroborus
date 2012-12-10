@@ -16,6 +16,13 @@ for i in $(ls mutants/mutant*.py) do
     # Make this mutant look like the package
     mv $i mutants/$1
 
-    uroborus mutants/$2
+    uroborus -s mutants/$2
+    
+    #generate the report, specific to the mutated line number
+    # --HERE--
 
     mv mutants/$1 $i
+
+
+# Take the average of PACKAGE_colors.txt
+
