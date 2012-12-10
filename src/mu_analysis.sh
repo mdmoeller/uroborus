@@ -19,12 +19,15 @@ for i in $(ls mutants/mutant*.py) do
     uroborus -s mutants/$2
     
     #generate the report, specific to the mutated line number
-    # --HERE--
-
     mv mutants/$1 $i
     n=$(echo $i | tr -d [:alpha:][:punct:])
     line=$(grep "^"$n mutants/mutants.txt | awk '{print $2}')
     java DisplayResult mutants $line
 
+done
+
 # Take the average of PACKAGE_colors.txt
-    cat color.txt | awk '{s1+=$1;s2+=$2;l++}END{print s1/l"\t"s2/l}'   
+
+outfile=$(cut -f1 -d'.' $1)
+
+cat $outfile_colors.txt | awk '{s1+=$1;s2+=$2;l++}END{print s1/l"\t"s2/l}'   
