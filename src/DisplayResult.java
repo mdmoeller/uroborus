@@ -24,9 +24,11 @@ public static void main(String args[]) throws Exception
 {
 	String f1=null;
 	int line_number=0;
+	System.out.println(args.length);
 	if(args.length!=0)
 	{
 		f1=args[0];
+		if(args.length>1)
 		line_number=Integer.parseInt(args[1]);
 		
 	}
