@@ -40,7 +40,7 @@ public class CreateHtml {
   out.write("<h1><u>uroborus</u></h1><pre>");
   out.write("<form name=\"form1\" action=\"#\">");
   out.write("<div align=\"center\">Threshold value: <input type=\"text\" name=\"threshold\"><br><input type=\"submit\" onclick=\"validate()\" value=\"Change\" /><br></div>");
-  
+  out.newLine();
   
  
   
@@ -92,12 +92,14 @@ String sentence=null;
             }        
             
             out.write(sentence); 
+            out.newLine();
     		
         }	
     
   
     
    out.write("</pre></body></html>");
+   out.newLine();
   
   //Close the output stream
   out.close();
