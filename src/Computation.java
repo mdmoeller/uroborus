@@ -173,6 +173,11 @@ public void pfCal() throws IOException
         
       
         buffered_reader1.close();
+
+    if(pass == 0 || fail == 0) {
+        System.out.println("DisplayResult: cannot compute HTML report when all tests fail or all tests pass.");
+        System.exit(0);
+    }
       
 }
 
