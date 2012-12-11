@@ -1,10 +1,11 @@
-package uroborus;
+package abc;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//import javax.swing.JApplet;
+
 
 /**
  *
@@ -12,17 +13,31 @@ import java.util.logging.Logger;
  */
 public class CreateHtml{
 	
-	static int threshold_value;
+	static int threshold_value=0;
+	static String code1[];
+	static int col1[];
+	static int stpf1[][];
+	static String results1[];
+	static String file_name1;
 	
 	public static void takeInput(String threshold)
 	{
-	//	return "Some result here";
+	
 		System.out.println("Its working");
-	//	threshold_value=Integer.parseInt(threshold);
+		System.out.println("Threshold value="+threshold);
+		threshold_value=Integer.parseInt(threshold);
+		create(code1,col1,stpf1,results1,file_name1, threshold_value);
+		
+	
 	}
  
-    public static void create(String code[],int col[], int stpf[][], String results[], String file_name)
+    public static void create(String code[],int col[], int stpf[][], String results[], String file_name, int threshold_value)
     {
+    	code1=code;
+    	col1=col;
+    	stpf1=stpf;
+    	results1=results;
+    	file_name1=file_name;
   // Create file 
   FileWriter fstream;
         try {
@@ -99,7 +114,7 @@ String sentence=null;
             else
             {	
             	
-            shade=RangeColor.htmlColor(col[i]);
+            shade=RangeColor.htmlColor(col[i], threshold_value);
            
             sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"; 
    
