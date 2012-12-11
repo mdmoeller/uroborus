@@ -18,7 +18,7 @@ public class CreateHtml {
         // Create file 
         FileWriter fstream;
         try {
-            String html_file=file_name+"_report.jsp";
+            String html_file=file_name+"_report.html";
             fstream = new FileWriter(html_file);
             System.out.println("Output file created!");
 
