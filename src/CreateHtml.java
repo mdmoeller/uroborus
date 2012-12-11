@@ -14,7 +14,7 @@ public class CreateHtml{
 	
 	static int threshold_value;
 	
-	public static void takeInput()
+	public static void takeInput(String threshold)
 	{
 	//	return "Some result here";
 		System.out.println("Its working");
