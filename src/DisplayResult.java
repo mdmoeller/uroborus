@@ -1,4 +1,3 @@
-package uroborus;
 
 import java.io.*;
 import java.text.DecimalFormat;

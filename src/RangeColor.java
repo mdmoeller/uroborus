@@ -1,4 +1,3 @@
-package uroborus;
 import java.util.Scanner;
 
 public abstract class RangeColor
@@ -96,13 +95,22 @@ public abstract class RangeColor
      */
     public static void main(String[] args)
     {
-        System.out.println("<html>");
+        java.util.Random random = new java.util.Random();
+        System.out.println("<html><title>RangeColor Demo</title>");
+        System.out.println("<script language=\"javascript\">");
+        System.out.println("    function changeColors()");
+        System.out.println("    {");
+        System.out.println("        document.getElementByID('1').style.");
+        System.out.println("    }");
+        System.out.println("</script>");
+
 
         for(int i=0; i<=120; i++) {
-            System.out.print("<font color=\"" + htmlColor(i) + "\"> COLOR #" + i + ", BRIGHT 1.0</font>    ");
-            System.out.print("<font color=\"" + htmlColor(i, 120, .75) + "\"> COLOR #" + i + ", BRIGHT 0.75</font>   ");
-            System.out.print("<font color=\"" + htmlColor(i, 120, .5) + "\"> COLOR #" + i + ", BRIGHT 0.5</font>    ");
-            System.out.println("<font color=\"" + htmlColor(i, 120, 0) + "\"> COLOR #" + i + ", BRIGHT 0.0</font><br>");
+            System.out.print("<div id=\"" + (i) + "\"");
+            int color = random.nextInt(120);
+            System.out.print(" name=\"" + color + "\" style=\"background-color:" + htmlColor(color) + "\">");
+            System.out.print("Statement number: " + i);
+            System.out.println("</div><br>");
         }
         System.out.println("</html>");
     }
