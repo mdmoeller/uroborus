@@ -173,6 +173,11 @@ public void pfCal() throws IOException
         
       
         buffered_reader1.close();
+
+        if(pass == 0 || fail == 0) {
+            System.out.println("No report created: cannot report when there are no passes or no failures.");
+            System.exit(0);
+        }
       
 }
 
