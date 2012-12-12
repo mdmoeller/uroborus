@@ -10,22 +10,17 @@ public abstract class RangeColor
      *
      * @param color      an integer between <code>0</code> and <code>120</code> (inclusive) that 
      *                   represents the hue between red (0) and green (120).
-     * @param clamp      set a cutoff value between 0 and 120 that "clamps" all values that are above it 
-     *                   (i.e. would appear more green) just get colored FULL GREEN.
      * @param brightness a double representing full brightness, <code>1.0</code> to 
      *                   null brightness, <code>0.0</code>.
-     * 
      *
      * @return           an html string <code>"#XXXXXX"</code> according to the appropriate color. Note: 
      *                   in the case of invalid input, Blue is returned.
      */
-    public static String htmlColor(int color, int clamp, double brightness)
+    public static String htmlColor(int color, double brightness)
     {
 
-        // If the color is above the cutoff, we "clamp" it to GREEN.
-        if( color > clamp ) {
-            return "#00ff00";
-        }
+        //Adjust lower
+        // brightness *= .75;
 
         //On invalid input, return bright blue (a color not otherwise used).
         if(color < 0 || color > 120 || brightness < 0 || brightness > 100) {
@@ -71,21 +66,10 @@ public abstract class RangeColor
      *
      * @return       an html string <code>"#XXXXXX"</code> according to the appropriate color.
      */
-    public static String htmlColor(int color, int clamp)
-    {
-        return htmlColor(color, clamp, 1.0);
-    }
-
-
-    /**
-     * Computes an htmlColor assuming brightness of 1.0 and no cutoff value (clamp = 120)
-     * @return       an html string <code>"#XXXXXX"</code> according to the appropriate color.
-     */
     public static String htmlColor(int color)
     {
-        return htmlColor(color, 120, 1.0);
+        return htmlColor(color, 1);
     }
-
 
 
     /**
@@ -93,6 +77,7 @@ public abstract class RangeColor
      *
      * Prints a file to standard out which represents of range of colors as a color test.
      */
+
     public static void main(String[] args)
     {
         java.util.Random random = new java.util.Random();
