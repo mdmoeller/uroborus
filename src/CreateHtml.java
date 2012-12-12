@@ -86,7 +86,8 @@ public class CreateHtml{
      out.newLine();
      out.write("var old_color = parseInt(elt.dataset.name);");
      out.newLine();
-     out.write("elt.style.backgroundColor = htmlColor(old_color, threshnum);}");
+     out.write("if(old_color!=-1){");
+     out.write("elt.style.backgroundColor = htmlColor(old_color, threshnum);}}");
     // out.write("{	document.getElementById(i.toString()).style.backgroundColor = htmlColor(i, threshnum);	}");
      out.newLine();
      out.write("}");
@@ -176,8 +177,8 @@ String sentence=null;
             		}	
        
             	
-            	sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >";
-            	sentence+="<span id=\""+i+"\" data-name=\""+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+            	sentence="<FONT size=\"5\"  >";
+            	sentence+="<span id=\""+i+"\" data-name=\"-1\" STYLE=\"background-color:"+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
             	sentence+=" <span style=\"width:500px;\"></span>";
             	sentence+="</span></FONT><br>";
             
@@ -187,11 +188,11 @@ String sentence=null;
             	
             shade=RangeColor.htmlColor(col[i]); //, threshold_value);
            
-            sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"; 
+            sentence="<FONT size=\"5\"  >"; 
    
            
             
-            sentence+="<span id=\""+i+"\" data-name=\""+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+            sentence+="<span id=\""+i+"\" data-name=\""+col[i]+"\" STYLE=\"background-color:"+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
         	sentence+=" <span style=\"width:500px;\"></span>";
         	sentence+="</span></FONT><br>";
             
