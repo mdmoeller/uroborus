@@ -1,11 +1,18 @@
 #!/usr/bin/python
 
 # Author: Dan Klein
-# Date: 7 November 12
-# Purpose: A rough, crude, amateur python code mutator
+# Creation date: 7 November 2012
+# Freeze date: 12 December 2012
+# Purpose: Python code mutation generation
 
 import sys
 from subprocess import call
+
+# These arrays store all of the mutatable operators the mutator can mutate.
+#
+# They're grouped by their interchangability; that is, any operator in a 
+# given array can be replaced by any other operator in that array and still
+# be valid in most cases.
 
 arithChars = ['+', '-', '*', '/', '%']
 augAssignChars = ['+=', '-=', '*=', '/=', '%=']
@@ -14,192 +21,17 @@ boolResultChars = ['True', 'False']
 boolCompareChars = ['or', 'and']
 eqCompareChars = ['==', '!=']
 
+# Stores the operator arrays so that they can be accessed programmatically
 ops = [arithChars, augAssignChars, numCompareChars, boolResultChars, boolCompareChars, eqCompareChars]
 
-def hasBool(line):
-    
-    # to-do: refactor this mess
-    andSplits = line.split(" and ")
-    orSplits = line.split(" or ")
-    LTSplits = line.split("<")
-    GTSplits = line.split(">")
-    eqSplits = line.split("==")
-    LTESplits = line.split("<=")
-    GTESplits = line.split(">=")
-    uneqSplits = line.split("!=")
-    trueSplits = line.split("True")
-    falseSplits = line.split("False")
-    
-    if(len(andSplits) != 1 or
-       len(orSplits) != 1 or
-       len(LTSplits) != 1 or
-       len(GTSplits) != 1 or
-       len(eqSplits) != 1 or
-       len(LTESplits) != 1 or
-       len(GTESplits) != 1 or
-       len(uneqSplits) != 1 or
-       len(trueSplits) != 1 or
-       len(falseSplits) != 1):
-        return True
-    else:
-        return False
-
-def hasArith(line):
-    
-    plusSplits = line.split(" + ")
-    minusSplits = line.split(" - ")
-    multiSplits = line.split(" * ")
-    divSplits = line.split(" / ")
-    modSplits = line.split(" % ")
-    
-    if(len(plusSplits) != 1 or
-       len(minusSplits) != 1 or
-       len(multiSplits) != 1 or
-       len(divSplits) != 1 or
-       len(modSplits) != 1):
-        return True
-    else:
-        return False
-
-
-def hasAdjustedAssign(line):
-    
-    plusSplits = line.split("+=")
-    minusSplits = line.split("-=")
-    multiSplits = line.split("*=")
-    divSplits = line.split("/=")
-    modSplits = line.split("%=")
-
-    if(len(plusSplits) != 1 or
-       len(minusSplits) != 1 or
-       len(multiSplits) != 1 or
-       len(divSplits) != 1 or
-       len(modSplits) != 1):
-        return True
-    else:
-        return False
-
+# Returns true if there are mutatable operators in the given line of code
 def isMutatable(line):
     
-    if(hasBool(line) or hasArith(line) or
-       hasAdjustedAssign(line)):
+    # True if line contains mutatable operators
+    if(getMutatableOps(line) != []):
         return True
     else:
         return False
-###
-#
-# THIS ALLL NEEDS CONSOLIDATION BADLY
-#
-###
-
-# Mutates a line from the source, replacing the specified
-# operator with the other arithmatic operators
-def mutateArith(line,op):
-    
-    # splits the line into pieces that flank the operator
-    splits = line.split(" " + op + " ")
-    
-    # the number of times the operator appears
-    instances = len(splits) - 1
-     
-    # stores the mutated lines
-    out = []
-    
-    # go over each split and change the one operator, creating 4
-    # new lines per occurance of the targetted operator
-    for x in range (0, len(arithChars)):
-        if(arithChars[x] != op):
-            
-            # generates a mutation for each instance of the operator
-            # in the line
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op,  arithChars[x]))
-    
-    return out
-
-def mutateAugAssign(line,op):
-    
-    # splits the line into pieces that flank the operator
-    splits = line.split(" " + op + " ")
-    
-    # the number of times the operator appears
-    instances = len(splits) - 1
-     
-    # stores the mutated lines
-    out = []
-    
-    # go over each split and change the one operator, creating 4
-    # new lines per occurance of the targetted operator
-    for x in range (0, len(arithChars)):
-        if((augAssignChars[x]) != op):
-            
-            # generates a mutation for each instance of the operator
-            # in the line
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op,  augAssignChars[x]))
-    
-    return out
-
-def mutateCompare(line, op):
-    
-    splits = line.split(" " + op + " ")
-    
-    instances = len(splits) - 1
-    
-    out = []
-    
-    for x in range (0, len(compareChars)):
-        if(compareChars[x] != op):
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op, compareChars[x]))
-                
-    return out
-
-def mutateBoolCompare(line, op):
-    
-    splits = line.split(" " + op + " ")
-    
-    instances = len(splits) - 1
-    
-    out = []
-    
-    for x in range (0, len(boolCompareChars)):
-        if(boolCompareChars[x] != op):
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op, boolCompareChars[x]))
-                
-    return out
-
-def mutateBoolResult(line, op):
-    
-    splits = line.split(" " + op + " ")
-    
-    instances = len(splits) - 1
-    
-    out = []
-    
-    for x in range (0, len(boolCompareChars)):
-        if(boolResultChars[x] != op):
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op, boolResultChars[x]))
-                
-    return out
-
-def mutateEqCompare(line, op):
-    
-    splits = line.split(" " + op + " ")
-    
-    instances = len(splits) - 1
-    
-    out = []
-    
-    for x in range (0, len(boolCompareChars)):
-        if(eqCompareChars[x] != op):
-            for y in range (1, instances + 1):
-                out.append(mutateLineAt(splits, y, op, eqCompareChars[x]))
-                
-    return out
-
 
 # Recursive function that takes goes over the current split
 # of the line, replacing the target instance of the operator
@@ -244,26 +76,33 @@ def getMutatableOps(line):
     
     # Goes into each array of operators, splitting the line on each
     for i in range (0, len(ops)):
+        
         for j in range (0, len(ops[i])):
             
             # splits the line on the operator
             splits = line.split(" " + ops[i][j] + " ")
+            
             if(len(splits) > 1):
+                
                 # appends the operator to the output if there is more than one split
                 out.append(ops[i][j])
     
     return out
 
+# Returns the number of times each operator occurs in the line
 def getNumOfInstances(line, mutOps):
     
     # stores the number of instances of each operator
     out = []
     
     for i in range (0, len(mutOps)):
+        
+        # Stores the number of times an operator is found in a given line
         out.append(len(line.split(" " + mutOps[i] + " ")))
         
     return out
 
+# Generates and writes mutated versions of Python source code located at the specified path
 def generateMutationPoints(path):
 
     # File that handles source code extraction
@@ -279,34 +118,34 @@ def generateMutationPoints(path):
     # Stores the name of the file for metadata generation.
     fileName = path[:-3]
     
-    # Counter for the total number of mutants
+    # Mutant "ID number" for file names
     mutantNumber = 0
     
     # Stores the lines of the source code
     lines = source.readlines()
     
     # iterates over the lines, keeping track of the mutatable ones
-    for x in range(len(lines)):
-        if(isMutatable(lines[x])):
+    for lineNum in range(len(lines)):
+        if(isMutatable(lines[lineNum])):
             
-            # stores the operators in the line and their instances
-            mutatables = getMutatableOps(lines[x])
-            instances = getNumOfInstances(lines[x], mutatables)
+            # stores the operators that appear in the line and their instances
+            mutatables = getMutatableOps(lines[lineNum])
+            instances = getNumOfInstances(lines[lineNum], mutatables)
             
-            # creates the mutated files for this line
-            for y in range(len(mutatables)):
+            # creates the mutated files for this operator
+            for opNum in range(len(mutatables)):
                 
                 # creates mutants per instance
-                for z in range(1, instances[y]):
+                for instance in range(1, instances[opNum]):
                     
                     # array containing possible mutant opertaotrs for the target op
-                    newOps = ops[getOpType(mutatables[y])]
+                    newOps = ops[getOpType(mutatables[opNum])]
                     
                     #creates a mutant per operator mutation
-                    for w in range(len(newOps)):
+                    for newOpNum in range(len(newOps)):
                         
                         # Duplicates aren't mutants, obviously
-                        if(newOps[w] != mutatables[y]):
+                        if(newOps[w] != mutatables[opNum]):
                             
                             # number of the mutant is stored int he file name
                             mutantName = "mutants/mutant" + str(mutantNumber) + ".py"
@@ -318,15 +157,15 @@ def generateMutationPoints(path):
                             mutantSource = lines[:]
                             
                             # replaces source line with the copy
-                            mutantSource[x] = mutateLineAt(mutantSource[x].split(" " + mutatables[y] + " "), z, 
-                                                                                 mutatables[y], newOps[w])
+                            mutantSource[lineNum] = mutateLineAt(mutantSource[lineNum].split(" " + mutatables[opNum] + " "), 
+                                                                 instance, mutatables[opNum], newOps[newOpNum])
                             
                             # write the mutated code
                             mutant.writelines(mutantSource)
                             
                             # logs the mutation
-                            mutantLog.write(str(mutantNumber) + "\t" + str(x + 1) + "\t" + mutatables[y] + "\t"
-                                            + newOps[w] + "\t" + str(z) + "\n")
+                            mutantLog.write(str(mutantNumber) + "\t" + str(lineNum + 1) + "\t" + mutatables[opNum] + "\t"
+                                            + newOps[newOpNum] + "\t" + str(instance) + "\n")
                             
                             mutant.close()
                             
