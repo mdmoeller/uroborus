@@ -1,4 +1,5 @@
 import java.io.*;
+
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -172,11 +173,6 @@ public void pfCal() throws IOException
         
       
         buffered_reader1.close();
-
-    if(pass == 0 || fail == 0) {
-        System.out.println("DisplayResult: cannot compute HTML report when all tests fail or all tests pass.");
-        System.exit(0);
-    }
       
 }
 
@@ -209,8 +205,7 @@ public void statementPassFail() throws IOException
         		{
         			
         			flag=true;
-        			//System.out.println(temp_array[i]);
-        			//System.out.println("flag="+flag);
+        			
         			break;
         		}
         	}	
@@ -221,7 +216,7 @@ public void statementPassFail() throws IOException
         			String s[];
         			s = str2.split(delimiter);
         			statement_no=Integer.parseInt(s[0]);
-        			//System.out.print("Statement_no= "+statement_no+";");
+        			
         			run_number=Integer.parseInt(s[1]);
         			//System.out.println("Run_number= "+run_number);
     			
@@ -334,7 +329,7 @@ public void createMutantFile(String file_name, int line_number) throws IOExcepti
 	BufferedWriter writer = new BufferedWriter(fwriter);
 	writer.write(average+"\t"+col[line_number]);
 	writer.newLine();
-	System.out.println(average+"   "+col[line_number]);
+//	System.out.println(average+"   "+col[line_number]);
 	writer.close();
 }
 
@@ -342,7 +337,7 @@ public void createMutantFile(String file_name, int line_number) throws IOExcepti
 public void createOutput(String file_name) throws IOException
 {
     
-    CreateHtml.create(code,col, statement_passfail,results, file_name);
+    CreateHtml.create(code,col, statement_passfail,results, file_name, 0);
   /*fstream = new FileWriter("Oo.htm");
   out = new BufferedWriter(fstream);
      
