@@ -231,13 +231,10 @@ public void statementPassFail() throws IOException
                 str2=buffered_reader2.readLine();
         }
       
-       /*for(int k=1;k<code.length;k++)
-        {
-        	for(int m=0;m<2;m++)
-        		System.out.print(statement_passfail[k][m]+"   ");
-        	System.out.println();
+      
         	
-        }*/
+        	
+        
         
         buffered_reader2.close();
         
@@ -262,14 +259,13 @@ public void getColorValue()
         double ppassed=((double)p/(double)pass);
         double pfailed=((double)f/(double)fail);
         
-        //System.out.println("Ppassed="+ppassed+";Pfailed="+pfailed);
+        
         
         double sum=ppassed+pfailed;
         
         if(sum!=0)
         {
-        	/*double percent_p=(double)p/(double)sum;
-        	double percent_f=(double)f/(double)sum;*/
+        	
         	percent_pass=(ppassed/(ppassed+pfailed))*100;
             percent_fail=(pfailed/(ppassed+pfailed))*100;
         }
@@ -340,7 +336,7 @@ public void createMutantFile(String file_name, int line_number) throws IOExcepti
 public void createOutput(String file_name) throws IOException
 {
     
-    CreateHtml.create(code,col, statement_passfail,results, file_name, 0);
+    CreateHtml.create(code,col, statement_passfail,results, file_name); //, 0);
   /*fstream = new FileWriter("Oo.htm");
   out = new BufferedWriter(fstream);
      
