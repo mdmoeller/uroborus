@@ -47,6 +47,7 @@ public class CreateHtml{
         
   BufferedWriter out = new BufferedWriter(fstream);
   out.write("<html><head><title>Fault localization</title>");
+  out.newLine();
   out.write("<script language=\"javascript\" type=\"text/javascript\">");
   out.write(" function validate(){ ");  
   out.write("var b=form1.threshold.value;");
@@ -68,6 +69,7 @@ public class CreateHtml{
     // out.write("{theApplet = document.getElementById(\"app\");");
     // out.write("document.getElementById(\"display\").innerHTML = theApplet.takeInput(form1.threshold.value);");
      out.write("</script></head>");
+     out.newLine();
   out.write("<body>");
  // out.write("<applet id=\"app\" width=0 height=0 code=\"CreateHTML.class\"></applet>");
   out.write("<h1><u>uroborus</u></h1><pre>");
@@ -106,7 +108,7 @@ String sentence=null;
        
             	
             	sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >";
-            	sentence+="<span class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+            	sentence+="<span id=\""+i+"\" name=\""+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
             	sentence+=" <span style=\"width:500px;\"></span>";
             	sentence+="</span></FONT><br>";
             
@@ -114,13 +116,13 @@ String sentence=null;
             else
             {	
             	
-            shade=RangeColor.htmlColor(col[i], threshold_value);
+            shade=RangeColor.htmlColor(col[i]); //, threshold_value);
            
             sentence="<FONT size=\"5\" STYLE=\"background-color:"+shade+"\" >"; 
    
            
             
-            sentence+="<span class=\"dropt\" title=\""+results[i]+"\">"+code[i];
+            sentence+="<span id=\""+i+"\" name=\""+shade+"\" class=\"dropt\" title=\""+results[i]+"\">"+code[i];
         	sentence+=" <span style=\"width:500px;\"></span>";
         	sentence+="</span></FONT><br>";
             
