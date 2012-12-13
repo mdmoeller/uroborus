@@ -19,27 +19,36 @@ fi
 # each time
 cp $2 mutants
 
+ls mutants/mutant*.py > muls_begin.txt
+
 cd mutants
 for i in $(ls mutant*.py); do
 
     # Make this mutant look like the package
     mv $i $1
 
-    uroborus -s $2
-    
     #generate the report, specific to the mutated line number
     n=$(echo $i | tr -d [:alpha:][:punct:])
-    # echo "N:" $n
-    line=$(grep ^$n mutants.txt | awk '{print $2}')
-    # echo "LINE:" $line
+    line=$(grep ^$n[^0-9] mutants.txt | awk '{print $2}')
 
-    java DisplayResult $pkg $line
+    echo "Running mutant "$n" (mutated line "$line")"
+
+    uroborus -s $2
+    
+
+    java DisplayResult $pkg
+
+    if [ $? == 0 ]; then
+        avgcol.sh $pkg"_report.html" $line >> $pkg"_colors.txt"
+    fi
 
     # Fix this mutant back
     mv $1 $i
 done
 
 cd ..
+
+ls mutants/mutant*.py > muls_end.txt
 
 # Take the average of PACKAGE_colors.txt
 

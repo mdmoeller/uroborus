@@ -1,7 +1,7 @@
 #!/usr/bin/python
+import urotest
 
-import DT_instrumented as DT
-target_module = DT
+DT = urotest.uro_import('DT')
 
 
 def training_error_zero(R):
