@@ -1,0 +1,24 @@
+Mutation
+
+To validate the ability of Uroboros to find bugs, we decided to implement mutation analysis on our examples to more reliably sew errors into working examples. To achieve this, we created a module that could be run from the command line that would take the path of a Python source file as an argument and generate "mutated" versions. These "mutants" would be identical to the original source, with the exception that an operator from the original file would be changed to another operator that could be found in the same place. The following operator "classes" were implemented:
+
+* Arithmetic operators (+, -, *, /, %)
+* Augmented assignment operators (+=, -=, *=, /=, %=)
+* Numeric comparison operators (<, >, <=, >=)
+* Equality comparison operators (==, !=)
+* Boolean comparison operators (or, and)
+* Boolean literals (True, False)
+
+The mutator module combs through a source file looking for any of these operators and enumerates all possible mutants per operator. For example, the line
+
+x = y + z
+
+would create four mutant files by replacing the '+' operator with the other operators in its "class" (-, *, /, and %).
+
+Should a line of code contain more than one instance of an operator (such as x = y + z + w), then each "instance" of the operator is treated as an independent mutation such that there is a total of one mutation per file.
+
+These mutated files are stored in a directory created by the module called "mutants", located in the same directory of the source file. Also included in the mutants directory is a text file that details the line number where the mutation occurs, the operator in the original source file, the new operator, and the instance of the replaced operator.
+
+To use the module, as the path to mutator.py to your PYTHONPATH, then call it on a file with
+
+$ mutator.py <src>
