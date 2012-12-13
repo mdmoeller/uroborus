@@ -1,35 +1,37 @@
 \documentclass[english]{article}
 
-\usepackage[latin9]{inputenc}
+\usepackage[latin9]{inputenc} 
 \usepackage[letterpaper]{geometry}
-\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in} 
 \usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{amssymb} 
 \usepackage{cite}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
 
 % Typeset UROBORUS:
-\newcommand{\Uro}{\textsc{Uroborus}}
-\newcommand{\Taran}{\textsc{Tarantula}}
+\newcommand{\Uro}{\textsc{Uroborus}} \newcommand{\Taran}{\textsc{Tarantula}}
 
 % The `example' files referred to by this text:
-\newcommand{\fc}{\texttt{faultycode}}
-\newcommand{\fcp}{\texttt{faultycode.py}}
-\newcommand{\fcT}{\texttt{faultycodeTest.py}}
-\newcommand{\fcip}{\texttt{faultycode\_instrumented.py}}
-\newcommand{\fcc}{\texttt{faultycode\_coverage.txt}}
-\newcommand{\fcpf}{\texttt{faultycode\_passfail.txt}}
-\newcommand{\fch}{\texttt{faultycode\_report.html}}
+\newcommand{\fc}{\textbf{faultycode}} 
+\newcommand{\fcp}{\textbf{faultycode.py}}
+\newcommand{\fcT}{\textbf{faultycodeTest.py}}
+\newcommand{\fcip}{\textbf{faultycode\_instrumented.py}}
+\newcommand{\fcc}{\textbf{faultycode\_coverage.txt}}
+\newcommand{\fcpf}{\textbf{faultycode\_passfail.txt}}
+\newcommand{\fch}{\textbf{faultycode\_report.html}}
+\newcommand{\RO}{\texttt{RuntimeOracle}}
 
 
 
-\title{Fault Localization with Uroborus}
-\author{Samarth Kishore \and Daniel Klein \and Mark Moeller \and Twisha Shah \and
-\{samarthk, kleindan, mmoeller, twisha\}@seas.upenn.edu}
+
+\title{Fault Localization with Uroborus} \author{Samarth Kishore \and Daniel Klein \and Mark Moeller
+\and Twisha Shah \and \{samarthk, kleindan, mmoeller, twisha\}@seas.upenn.edu}
 
 
 
-\begin{document}
-\maketitle
+\begin{document} \maketitle
 
 
 \section{Introduction}
@@ -37,72 +39,354 @@
 \Uro\ is a fault localization tool for Python built in the style of Jones, Harrold and Stasko's
 \Taran ~\cite{Jones}.
 
-Suppose we have written a Python module \fcp\ that we we want to debug with the
-help of \Uro. At a high level, we need to do the following:
-\begin{enumerate}
-\item We write a set of \Uro\ tests for \fc\ that call the methods of the module we want to test.
-\item We run the \Uro\ on the test module, which generates datafiles detailing statement coverage and assertion
-passes and failures.
-\item \Uro\ generates a ``report,'' which is an HTML file representing the source code, colored according
-to the pass/failure calculations in the style of \Taran.
-\end{enumerate}
-\textbf{Note:} At this time, \Uro\ is only able to test the \emph{methods} of an
-input source file. That is, scripts are not handled under the current framework, but are an area being
-considered for further improvement of the tool.
+Suppose we have written a Python module \fcp\ that we we want to debug using a visualization
+strategy like \Taran. We have developed a tool, \Uro, which does exactly this. 
+To use \Uro\ to debug a Python module, we need to do the following: 
+\begin{enumerate} 
+\item We write a set of \Uro\ tests for
+\fc\ that call the methods of the module we want to test.  
+\item We run the \Uro\ on the test
+module, which generates datafiles detailing statement coverage and assertion passes and failures.
+\item \Uro\ finally generates a ``report,'' which is an HTML file representing the source code, colored
+according to the pass/failure calculations in the style of \Taran. We use this report to help
+localize where the faulty lines likely are. 
+\end{enumerate} 
+\textbf{Note:}
+At this time, \Uro\ is only able to test the \emph{methods} of an input source file, a la unit
+testing. That is, executable
+scripts are not handled under the current framework, but are an area being considered for further
+improvement of the tool.
 
-%%\section{Instrumenting a Source File}
-
-%%To instrument a source file called \fcp, we just need to run the command:\\
-
-%%\texttt{\$ instrument.py }\fcp\ \\
-
-%%This will produce a file called \fcip\  which is the instrumented version of the source.
-
-\section{Creating \Uro\ Test Modules}
+\section{Using Uroborus} \subsection{Creating \Uro\ Test Modules}
 
 A developer first needs to create \Uro-style tests for \fc. To do that, we just have to write a
-module, say \fcT, that has the following header:\\
-\begin{verbatim}
-#!/usr/bin/python
-import urotest
+module, say \fcT, that has the following header:\\ 
 
-faultycode = urotest.uro_import('faultycode')
+\begin{verbatim} 
+#!/usr/bin/python 
+
+import urotest
+faultycode = urotest.uro_import('faultycode') 
 \end{verbatim}
 
-From there, the test suite consists of \emph{methods} which are tests of the desired methods of \fc. 
-That is, the script need not do anything when run directly. In particular, the test module \emph{should
-not} call any methods of instrumented code if run directly. 
-Each method of the test suite should take one parameter, and that parameter is the
-\texttt{RuntimeOracle} that will be used for that test case.
+From there, the test suite consists of \emph{methods} which are tests of the desired methods of \fc.
+That is, the script need not do anything when run directly. In particular, the test module
+\emph{should not} call any methods of instrumented code if run directly.  Each method of the test
+suite should take one parameter, and that parameter is the \RO\ that will be used
+for that test case. For example, we might have:
+
+\begin{verbatim}
+def test_that_add_returns_six(R):
+    value = faultycode.add(2, 4)
+    R.assertEquals(6, R)
+\end{verbatim}
 
 The developer may optionally include a method called \texttt{init} if some intial set up is
 required. \Uro\ will run \texttt{init} if it exists before any other tests in the module.
 
-Note that \emph{any} methods at the package level in \fcT\ will be
-assumed to be an \Uro\ test that takes a RuntimeOracle as an argument.
-If a helper method is required for one or more test methods, it should
-be encapsulated within a class in \fcT\ so that it is not run directly
-as an \Uro\ test.
+Note that \emph{any} methods at the package level in \fcT\ will be assumed to be an \Uro\ test that
+takes a \RO\ as an argument.  If a helper method is required for one or more test methods,
+it should be encapsulated within a class in \fcT\ so that it is not run directly as an \Uro\ test.
 
-\section{Localizing Faults}
+\subsection{Localizing Faults}
 
 Next, the developer runs the tests. This is done with:\\
  
 \texttt{\$ uroborus }\fcT \\
 
-The module-level methods will each be
-run in turn by \Uro, very similarly to how JUnit runs a set of methods. Order of execution of these
-methods is not defined.
+The module-level methods will each be run in turn by \Uro, very similarly to how JUnit runs a set of
+methods. Order of execution of these methods is not defined, except that \texttt{init} will be
+called first.
 
-All assertions must be
-done with \texttt{RuntimeOracle}'s assertion methods (for details, see the documentation for RuntimeOracle).
+All assertions must be done with \RO's assertion methods (for details, see the
+details regarding \RO\ in section \ref[ro]).
 
-When the tests are run, \Uro\
-will generate \fcc\ and \fcpf, and it will write information to standard out about the tests that
-pass and fail. 
+When the tests are run, \Uro\ will generate \fcc\ and \fcpf, and it will write information to
+standard out about the tests that pass and fail. 
 
-Finally, \Uro\ generates the HTML report. It will output a file called \fch. This file is
-the fault-visualized version of the source code.
+Finally, \Uro\ generates the HTML report. It will output a file called \fch. This file is the
+fault-visualized version of the source code.
+
+
+\section{Implementation}
+
+The following sections provide details regarding the implementation decisions of \Uro.
+
+\subsection{Overview}
+
+A single run of \Uro\ is divided into three stages: Instrumentation, Test Running, and Report
+Generation. The source file being tested and the test suite are the input to Instrumentation. After
+that, the output of each stage is the input to the next one, ultimately concluding with the
+generation of the final visualization.
+
+\subsection{Instrumentation}
+
+The module \textbf{instrument.py} is one of the core components of \Uro. Its function is to
+``instrument''
+the source file by inserting a command to write to a data file before nearly every line. 
+It instruments only those lines of code that can get executed at
+run time. The instrumented code is then used in place of the original code for user generated tests.
+The file writes that get instrumented with the source lines enable \Uro\ to keep track of the lines
+that get executed during different runs/tests. In the test running stage, a coverage file is
+generated as a result of the file writes in the instrumented file that keeps track of the lines that
+were executed in each run.
+
+The challenge with instrumenting source files is when there are classes. The \Uro\ instrumenter
+takes care not to instrument class and function defs, as those would be executed on import. 
+Since there is a small setup required that must happen after the source is imported before testing
+can begin, the importation itself cannot start logging statement executions.
+Since python uses indentation to delimit
+blocks, the file writes are indented at the same level as
+the line being instrumented. Also, statements like \texttt{else} and \texttt{catch} are not
+instrumented, because they cannot be syntactically captured by the insertion of a preceding line.
+
+Another feature of the \textbf{instrument.py} module is the way it handles line continuation in Python. Since
+Python allows a single statement to span several lines in some cases, the instrumenter is careful not to instrument
+in the middle of a statement. This was somewhat tricky to implement, because a line break is the
+normal statement delimiter in Python.
+
+In the typical use case, \Uro\ calls \textbf{instrument} on-the-fly. However, some source code can
+be instrumented independently by running:\\
+\begin{verbatim}
+$ instrument.py faultycode.py
+\end{verbatim}
+
+\subsection{Running Uroborus Tests} \label[ro]
+
+Generating a visualization like \Taran's presents a difficult challenge: it combines the need for
+simple statement coverage information with information about passing and failing tests in an
+interconnected way. Normally the two sets of information, coveraging and passrate, are orthogonal
+issues and can be handled by separate utilities. For example, in the Java environment, Cobertura
+handles coverage, while JUnit handles passing and failing of tests. 
+\Uro\ handles their combination with 
+a class called \RO. A single \RO\ is constructed for the entire 
+the test suite (this is not really a Singleton because it is conceivable that multiple
+\RO's might be needed if \Uro\ was expanded to support multiple-file source modules).
+
+A reference to the \RO\ is coded into the instrumented source file, as well as passed to
+each test method as a parameter. The \RO\ serves several purposes. First, it numbers each
+test method called as ``runs,'' and provides the instrumented source code with access to what run is
+being executed at a particular time. That way, the instrumented code can output to the coverage file
+which statements are executed by each run. Next, the \RO\ provides the assertion checking
+that is necessary to writing unit tests. Each successive assertion called on the \RO\ is
+implicitly `and'-ed until the \RO\ is notified that the run is complete (either the test
+method completed or an exception was raised). At that point, if the result of the `and' of all of
+the assertions is recorded as the result of that run.
+
+\RO\ provides the following methods:
+\begin{enumerate}
+\item \textbf{getRunNum(self)} \\
+    Returns the number of the current run. This is not meant to be used by the test developer in
+    tests, but rather by the instrumented code only.
+\item \textbf{assertTrue(self, expr)} \\
+    This method performs the most basic assertion check. Passing a False (typically the result of an
+    expression) to \texttt{assertTrue} will result in a failure for the run.
+\item \textbf{assertEquals(self, arg1, arg2)} \\
+    Equivalent to \texttt{assertTrue(arg1 == arg2)}. 
+\item \textbf{run\_complete(self)} \\
+    Notify this \RO\ that a test has completed and that the passing or failing status of
+    the current run should be recorded, and the next run should be initiated.
+\item \textbf{except\_fail(self)} \\
+    Notify this \RO\ that the run ended because of an exception, and should be immediately
+    failed.
+\item \textbf{passes(self)}  \\
+    Returns the number of passes which have been completed.
+\item \textbf{fails(self)}  \\
+    Returns the number of failures which have been completed.
+\item \textbf{tests\_complete(self)} \\
+    Notifies the \RO\ that all tests have been completed so that it can close its open
+    filestreams.
+
+\end{enumerate}
+
+In all, there are two data files output by the test running stage. The coverage file denotes which
+statements were executed in each run.
+This information appears in the file as a column of statement numbers separated by a tab from a
+column of run numbers.
+The pass/fail file, on the other hand, denotes which runs passed and failed.
+This information appears as a column of run numbers separated by a tab from a column of 1's and 0's,
+with 1's representing a passing result.
+By combining the information of these two files, the contribution of a single statement towards
+passing or failing can be analyzed.
+
+\subsection{Report Generation}
+
+\begin{enumerate}
+\item \textbf{DisplayResult.java} \\
+This class takes the module name as an argument. It creates an instance of the class Computation and calls its methods.
+In a typical run of \Uro, the call to DisplayResult is made automatically. However, if for some
+reason one needs to generate the report independently, one should run:
+\begin{verbatim}
+$ java DisplayResult faultycode
+\end{verbatim}
+Display result infers the names of the required data files, and looks for them in the current
+directory.
+
+\item \textbf{Computation.java} \\
+This class recognizes three files using filename as \fcp, \fcpf, and
+\fcc. The explanation of its methods are as follows.
+
+ \begin{enumerate}
+ \item \textbf{codeToString()} \\
+This method reads the \fcp\ file line by line and stores it in a String array code. While
+adding each line to \texttt{code[]}, a statement number (starting from 1) is appended at the beginning of
+each line and stored in \texttt{code[]} such that every line can be indexed in \texttt{code[]} using its statement
+number. \\
+e.g. Statement 5 is stored in \texttt{code[5]}.
+
+\item \textbf{getCount()} \\
+This method simply counts the number of lines in the \fcpf\ file.
+
+\item \textbf{pfArray()} \\
+A passfail array is declared with length equal to the number of lines in
+\fcpf\ file.
+For every line in the \fcpf\ file, the first numeric value (run number) is stored in
+a variable \texttt{index} and the other numeric value (0 or 1, which represents fail or pass) is stored in
+\texttt{passfail[]} at the location stored in index.
+e.g. If run number 2 has passed, \texttt{passfail[2]=1}.
+
+\item \textbf{pfCal()} \\
+This method calculates the total number of runs that passed and the total number of runs that
+failed. It runs a for loop through each element of \texttt{passfail[]} and increments \texttt{pass} if the value
+stored is 1 and increments \texttt{fail} if the value is 0.
+
+\item \textbf{statementPassFail()} \\
+This method calculates the number of times each statement of the code passed as well as the number of times it failed.
+It first creates an array \texttt{temp\_array} of size equal to the number of lines in
+\fcc.
+file. A two dimensional array \texttt{statement\_passfail[][]} is created to store the number of passes and fails
+for each statement. Each line in the \fcc\ file is read and checks if that same line
+    exists in the \texttt{temp\_array[]}. If it exists, it does nothing and reads the next line. If it does
+    not exist, the line is added in the next available location in \texttt{temp\_array[]}. Using space is
+    delimiter the first and second numeric values in the line are stored in the variables
+    \texttt{statement\_no} and \texttt{run\_number} respectively. 
+    To check whether this \texttt{run\_number} had passed or failed,
+    it checks the value of \texttt{passfail[run\_number]} which would be 1 or 0 respectively. If it is 1,
+    \texttt{statement\_passfail[statement\_no][1]} is incremented by 1 otherwise
+    \texttt{statement\_passfail[statement\_no][0]} is incremented by 1.
+
+\item \textbf{getColorValue()} \\
+This method calculates the color value of each statement of the code ranging between 0 and 120.
+For each statement, its passing percentage (\texttt{passed}) is calculated as number of runs in which it
+passes divided by the total number of passing runs. Its failing percentage (\texttt{pfailed}) is calculated
+similarly. These values are stored in a results array. The color value is calculated as
+(passed/(passed+pfailed))*120.
+
+\item \textbf{createOutput()} \\
+        The \texttt{create()} method of CreateHTML class is called.
+\end{enumerate}
+
+\item \textbf{CreateHTML.java} \\
+        An html file is created with the name \fch.
+
+\item \textbf{RangeColor.java} \\
+        This class provides static methods for computing an html color as a string from a hue value
+        between 0 and 120. The various methods are overloaded. The methods share the name
+        \textbf{htmlColor()}. For example \texttt{htmlColor(int color)} returns the String
+        \texttt{"\#ff0000"} (pure red) on input 0, and \texttt{"\#00ff00"} (pure green) on input 120. For all other
+        inputs in between 0 and 120, a linear blend of red and green is computed. For all invalid
+        inputs, the string \texttt{"\#0000ff"} (pure blue) is returned to make sure that it is clear
+        from the final report that an unexpected value was passed.
+        input.
+
+\item \fch\ \\
+This file includes displays all the entire code with each statement highlighted by a color
+corresponding to the value calculated by the above formula. Comments are highlighted with gray
+color. Statements that are not executed by any run are not highlighted by any color. There is also a
+slide bar locked at the top of the page which can be used to change the value of a threshold such
+that the statements having their color value more than the threshold will be colored green and the
+remaining statements will be recolored based on a new scale ranging from 0 to the threshold value.
+
+\end{enumerate}
+
+\section{Mutation Analysis}
+
+\subsection{Python Source Mutation}
+To validate the ability of \Uro\ to find bugs, we decided to implement mutation analysis on our
+examples to more reliably sew errors into working examples. To achieve this, we created a module
+that could be run from the command line that would take the path of a Python source file as an
+argument and generate ``mutated" versions. These ``mutants'' would be identical to the original source,
+with the exception that an operator from the original file would be changed to another operator that
+could be found in the same place. The following operator ``classes'' were implemented:
+
+\begin{itemize} 
+\item Arithmetic operators: \texttt{(+, -, *, /, \%)} 
+\item Augmented assignment
+operators: (\texttt{+=, -=, *=, /=, \%=}) 
+\item Numeric comparison operators: (\texttt{<, >, <=,
+>=})
+\item Equality comparison operators: \texttt{(==, !=)} 
+\item Boolean comparison operators:
+\texttt{(or, and)} 
+\item Boolean literals: \texttt{(True, False)} 
+\end{itemize}
+
+The mutator module combs through a source file looking for any of these operators and enumerates all
+possible mutants per operator. For example, the line
+
+\texttt{x = y + z}
+
+would create four mutant files by replacing the `+' operator with the other operators in its
+``class,'' \texttt{(-, *, /, and \%).}
+
+Should a line of code contain more than one instance of an operator (such as \texttt{x = y + z + w}), then
+each ``instance" of the operator is treated as an independent mutation such that there is a total of
+one mutation per file.
+
+These mutated files are stored in a directory created by the module called, \texttt{mutants/}, located in the
+same directory of the source file. Also included in the mutants directory is a ``mutant index,''
+\texttt{mutants.txt}, that
+details for each numbered mutant, respectively, the line number where the mutation occurs, the operator in the
+original source file, the new
+operator, and the instance number of the replaced operator in tab separated columns.
+
+The mutator can be used to produce mutations on a file directly with the command: \\
+\begin{verbatim}
+$ mutator.py faultycode.py
+\end{verbatim}
+
+\subsection{Mutation Analysis Script}
+
+In order to evaluate the \Taran\ approach to visualization (and \Uro's implementation of it), 
+we have produced a script called
+\textbf{mu\_analysis.sh}. The script is run with the source module and the test suite as arguments:
+\begin{verbatim}
+$ mu_analysis.sh faultycode.py faultycodeTest.py
+\end{verbatim}
+The script does the following:
+\begin{enumerate}
+\item Mutate the source file, producing a directory of mutants
+\item For each mutant $m_i$, do the following
+    \begin{enumerate}
+    \item Run \Uro\ on the test suite, given $m_i$.
+    \item Determine from the index, \textbf{mutants.txt}, which line was mutated in order to create
+    $m_i$. Call this line $L_i$.
+    \item Record both the average color \Uro\ assigns to all lines in $m_i$ except for $L_i$, and
+    the color specifically assigned to $L_i$. Both of these values are written separated by a tab 
+    to the file \textbf{faultycode\_colors.txt}.
+    \end{enumerate}
+\item Average both columns of \textbf{faultycode\_colors.txt}. The resulting two values are the
+average color \Uro\ assigns to \emph{non-mutated} lines and the average color \Uro\ assigns to
+\emph{mutated} lines. 
+\end{enumerate}
+
+For the two modules we tested that had non-trivial purposes and unit tests, the following
+results were achieved: 
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{file} & \textbf{Average non-mutant hue} & \textbf{Average mutant hue} \\
+    \hline
+    BPT & 42.1751  & 12.4211 \\
+    \hline
+    negadecimal & 41.4801   &  32.0566 \\
+    \hline
+\end{tabular}
+\end{center}
+\textbf{Note:} Color values correspond to the 0 to 120 range \Uro\ uses to encode hue, where
+0 is pure red, and 120 is pure green.
+
 
 
 \bibliographystyle{plain}
