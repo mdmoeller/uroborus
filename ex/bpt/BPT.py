@@ -30,20 +30,6 @@ class Node:
 
         return self.chld[-1].search(key)
 
-    def to_str(self, ind=0):
-        s = "   "*ind + "Elements: " + str(self.elmts) + '\n'
-        s += "   "*ind + "Children: " + (" (leaf)" if self.leaf else "(see below)") + '\n\n'
-        for c in self.chld:
-            s += c.to_str(ind+1) + '\n'
-        return s
-
-    def __str__(self):
-        return self.to_str()
-
-    def print_tree(self):
-        print str(self)
-
-
     # ignoring d for right now.
     def insert(self, pair, root=False):
         # Don't recurse; just insert
@@ -102,30 +88,6 @@ class Node:
         else:
             return None
     
-    def draw_graph(self, ID=0):
-        print "n" + str(ID) + '[label="',
-
-        size = len(self.elmts)
-        for el_i in range(size-1):
-            if self.leaf:
-                print "<e" + str(el_i) + "> " + str(self.elmts[el_i][1]) + "|",
-            else:
-                print "<f" + str(el_i) + ">|<e" + str(el_i) + "> " + str(self.elmts[el_i]) + "|",
-
-        if self.leaf:
-            print "<e" + str(size-1) + "> " + str(self.elmts[-1][1]) + '"];'
-        else:
-            print "<f" + str(size-1) + ">|<e" + str(size-1) + "> " + str(self.elmts[-1]) + "| <f" + str(size) + '>"];'
-
-        # print (str(self.elmts[-1][1]) if self.leaf else str(self.elmts[-1])), '"];'
-
-        for i in range(len(self.chld)):
-            n = ID * (self.d+1) + i + 1
-            self.chld[i].draw_graph(ID=n)
-            print '"n' + str(ID) + '":f' + str(i) + " -> " + '"n' + str(n) + '";'
-            # print '"n' + str(ID) + '":f' + str(i) + " -> " + '"n' + str(n) + '":e1;'
-
-
 
         
 
@@ -141,9 +103,6 @@ class BPT:
             for line in lines:
                 self.add( int(line), str(int(line)) + "*" )
     
-    def print_tree(self):
-        self.head.print_tree()
-
     def add(self, x, y=None):
         if y is not None:
             self.add((x,y))
@@ -156,10 +115,3 @@ class BPT:
 
     def search(self, x):
         return self.head.search(x)
-
-    def draw_dot(self):
-        print "digraph g {"
-        print "splines=false;"
-        print "node [shape=record]"
-        self.head.draw_graph()
-        print "}"

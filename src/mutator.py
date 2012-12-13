@@ -145,7 +145,7 @@ def generateMutationPoints(path):
                     for newOpNum in range(len(newOps)):
                         
                         # Duplicates aren't mutants, obviously
-                        if(newOps[w] != mutatables[opNum]):
+                        if(newOps[newOpNum] != mutatables[opNum]):
                             
                             # number of the mutant is stored int he file name
                             mutantName = "mutants/mutant" + str(mutantNumber) + ".py"

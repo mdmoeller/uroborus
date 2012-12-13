@@ -19,10 +19,10 @@ fi
 # each time
 cp $2 mutants
 
-ls mutants/mutant*.py > muls_begin.txt
-
 cd mutants
 for i in $(ls mutant*.py); do
+
+    rm -rf *_instrumented.py *_passfail.txt *_coverage.txt *.pyc *_report.html *_colors.txt *~
 
     # Make this mutant look like the package
     mv $i $1
@@ -39,7 +39,7 @@ for i in $(ls mutant*.py); do
     java DisplayResult $pkg
 
     if [ $? == 0 ]; then
-        avgcol.sh $pkg"_report.html" $line >> $pkg"_colors.txt"
+        avgcol.sh $pkg"_report.html" $line >> ../$pkg"_colors.txt"
     fi
 
     # Fix this mutant back
@@ -48,8 +48,6 @@ done
 
 cd ..
 
-ls mutants/mutant*.py > muls_end.txt
-
 # Take the average of PACKAGE_colors.txt
 
-cat mutants/$pkg"_colors.txt" | awk '{s1+=$1;s2+=$2;l++}END{print s1/l"\t"s2/l}'   
+cat $pkg"_colors.txt" | awk '{s1+=$1;s2+=$2;l++}END{print s1/l"\t"s2/l}'   
